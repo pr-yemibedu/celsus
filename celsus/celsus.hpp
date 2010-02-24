@@ -18,6 +18,11 @@
 #define MAKE_SCOPED(type) type GEN_NAME(ANON, __LINE__)
 // #define SCOPED_PROFILE(s) LogMgr::Scope GEN_NAME(log, __LINE__)(s);
 
+template<typename T>
+T xchg_null(T& t)
+{
+  T tmp = t; t = NULL; return tmp;
+}
 
 template<class T>
 void container_delete(T& container)
@@ -85,5 +90,8 @@ bool write_file(const uint8_t* buf, const uint32_t len, const char* filename);
 
 float randf(const float min_value, const float max_value);
 
+typedef const char* cstr;
+
+std::string to_string(char const * const format, ... );
 
 #endif // #ifndef CELSUS_HPP
