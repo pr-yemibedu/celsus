@@ -2,6 +2,7 @@
 #define MEMORY_MAPPED_FILE_HPP
 
 #include <stdint.h>
+#include <windows.h>
 
 class MemoryMappedFile
 {

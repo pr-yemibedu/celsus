@@ -1,6 +1,8 @@
-#include "DXUtils.hpp"
+#include "stdafx.h"
+#include "DX10Utils.hpp"
 #include "celsus.hpp"
-#include <boost/scoped_array.hpp>
+#include "Logger.hpp"
+#include "CelsusExtra.hpp"
 
 ID3D10Effect* load_effect(const char* filename, ID3D10Device* device)
 {

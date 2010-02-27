@@ -16,5 +16,9 @@
 
 #include <assert.h>
 #include <time.h>
-#include <D3DX10.h>
+#include <stdint.h>
+#include <windows.h>
+
+#include <boost/scoped_array.hpp>
+#include <string>
 

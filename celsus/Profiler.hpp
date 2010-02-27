@@ -6,6 +6,7 @@
 #include <stack>
 #include <string>
 #include <cassert>
+#include <windows.h>
 #include "celsus.hpp"
 
 // Profiler singleton. Use the SCOPED_PROFILE macro to mark enter/leaving scope

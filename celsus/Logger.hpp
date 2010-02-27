@@ -124,4 +124,31 @@ private:
 std::string toString(char const * const format, ... );
 
 
+class ErrorObj
+{
+public:
+  ErrorObj(const HRESULT hr)
+    : _hr(hr)
+  {
+    if (FAILED(_hr)) {
+      LPVOID lpMsgBuf;  
+      FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,  
+        NULL, hr, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), 
+        (LPTSTR)&lpMsgBuf, 0, NULL);  
+      LOG_ERROR_LN((const char*)lpMsgBuf); 
+      LocalFree( lpMsgBuf ); 
+    }
+  }
+  operator HRESULT() { return _hr; }
+private:
+  HRESULT _hr;
+};
+
+inline ErrorObj make_error(const HRESULT hr) { return ErrorObj(hr); }
+
+#define LOGGED_HR(x) make_error(x)
+
+#define RETURN_ON_FAIL_HR(x) { HRESULT hr; if (FAILED(hr = LOGGED_HR(x))) { return hr; } }
+#define RETURN_ON_FAIL(x) { if (FAILED(LOGGED_HR(x))) { return; } }
+
 #endif

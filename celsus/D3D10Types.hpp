@@ -21,5 +21,4 @@ typedef _com_ptr_t< _com_IIID<ID3DX10Font, &IID_ID3DX10Font> > ID3DX10FontPtr;
 D3D10_PTR(ID3D10BlendState);
 D3D10_PTR(ID3D10DepthStencilState);
 
-
 #endif

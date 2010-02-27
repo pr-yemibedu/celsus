@@ -1,7 +1,5 @@
 #include "stdafx.h"
 #include "celsus.hpp"
-#include <boost/scoped_array.hpp>
-#include <stdint.h>
 
 bool load_file(uint8_t*& buf, uint32_t& len, const char* filename, const bool zero_terminate)
 {

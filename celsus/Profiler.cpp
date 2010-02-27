@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Profiler.hpp"
+#include "Logger.hpp"
 
 Profiler* Profiler::instance_ = NULL;
 

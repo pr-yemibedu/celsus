@@ -164,24 +164,12 @@
 				>
 			</File>
 			<File
-				RelativePath=".\celsus\DXUtils.cpp"
+				RelativePath=".\celsus\DX10Utils.cpp"
 				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\celsus\DX11Utils.cpp"
+				>
 			</File>
 			<File
 				RelativePath=".\celsus\Logger.cpp"
@@ -189,6 +177,10 @@
 			</File>
 			<File
 				RelativePath=".\celsus\MemoryMappedFile.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\celsus\path_utils.cpp"
 				>
 			</File>
 			<File
@@ -258,6 +250,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\celsus\CelsusExtra.hpp"
+				>
+			</File>
+			<File
 				RelativePath=".\celsus\ChunkIO.hpp"
 				>
 			</File>
@@ -266,11 +262,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\celsus\D3DTypes.hpp"
+				RelativePath=".\celsus\D3D10Types.hpp"
 				>
 			</File>
 			<File
-				RelativePath=".\celsus\DXUtils.hpp"
+				RelativePath=".\celsus\DX10Utils.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\celsus\DX11Utils.hpp"
 				>
 			</File>
 			<File
@@ -283,6 +283,10 @@
 			</File>
 			<File
 				RelativePath=".\celsus\MemoryMappedFile.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\celsus\path_utils.hpp"
 				>
 			</File>
 			<File

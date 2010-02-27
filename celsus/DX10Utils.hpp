@@ -5,7 +5,7 @@
 #include <utility>
 #include <vector>
 #include <stdint.h>
-#include "D3DTypes.hpp"
+#include "D3D10Types.hpp"
 
 ID3D10Effect* load_effect(const char* filename, ID3D10Device* device);
 

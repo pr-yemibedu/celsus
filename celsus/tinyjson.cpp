@@ -2,6 +2,7 @@
 #include "tinyjson.hpp"
 #include "celsus.hpp"
 #include "Profiler.hpp"
+#include "CelsusExtra.hpp"
 
 namespace json
 {
