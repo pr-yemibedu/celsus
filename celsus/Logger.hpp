@@ -149,6 +149,7 @@ inline ErrorObj make_error(const HRESULT hr) { return ErrorObj(hr); }
 #define LOGGED_HR(x) make_error(x)
 
 #define RETURN_ON_FAIL_HR(x) { HRESULT hr; if (FAILED(hr = LOGGED_HR(x))) { return hr; } }
+#define RETURN_ON_FAIL_HR_BOOL(x) { HRESULT hr; if (FAILED(hr = LOGGED_HR(x))) { return false; } }
 #define RETURN_ON_FAIL(x) { if (FAILED(LOGGED_HR(x))) { return; } }
 
 #endif
