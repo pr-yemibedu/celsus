@@ -21,8 +21,17 @@ T xchg_null(T& t)
 template<class T>
 void container_delete(T& container)
 {
-  for (T::iterator it = container.begin(); it != container.end(); ++it) {
+  for (T::iterator it = container.begin(), e = container.end(); it != e; ++it) {
     delete (*it);
+  }
+  container.clear();
+}
+
+template<class T>
+void map_delete(T& container)
+{
+  for (T::iterator it = container.begin(), e = container.end(); it != e; ++it) {
+    delete it->second;
   }
   container.clear();
 }
