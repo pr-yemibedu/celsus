@@ -62,7 +62,7 @@ public:
   LogMgr& EnableOutput(Output output);
   LogMgr& DisableOutput(Output output);
   LogMgr& OpenOutputFile(const char* pFilename);
-  LogMgr& BreakOnError(const bool setting);
+  LogMgr& break_on_error(const bool setting);
 
   /**
    * Enable/disable output of a certain severity on a certain channel

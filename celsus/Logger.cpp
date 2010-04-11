@@ -224,7 +224,7 @@ std::string LogMgr::ToString(char const * const format, ... )
   return std::string(buf);
 }
 
-LogMgr& LogMgr::BreakOnError(const bool setting) 
+LogMgr& LogMgr::break_on_error(const bool setting) 
 {
   break_on_error_ = setting;
   return *this;
