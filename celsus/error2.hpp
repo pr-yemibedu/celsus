@@ -21,7 +21,18 @@ private:
 
 inline ErrorObj make_error(const HRESULT hr) { return ErrorObj(hr); }
 
-template<typename T> struct ErrorPredicate{};
+template<typename T> struct ErrorPredicate
+{
+  static bool test_bool(T a)
+  {
+    return !!a;
+  }
+
+  static HRESULT test_hresult(T a)
+  {
+    return !!b ? S_OK : E_FAIL;
+  }
+};
 
 template<> struct ErrorPredicate<bool>
 {
@@ -49,8 +60,9 @@ template<> struct ErrorPredicate<HRESULT>
 	}
 };
 
-#define RETURN_ON_FAIL_HR(x, pred, log) { HRESULT hr = !pred::test_hresult(x); if (FAILED(hr) { log(#x); return hr; } }
-#define RETURN_ON_FAIL_BOOL(x, pred, log) { bool b = !pred::test_bool(x); if (!b) { log(#x); return false; } }
-#define RETURN_ON_FAIL_VOID(x, pred, log) { bool b = !pred::test_bool(x); if (!b) { log(#x); return; } }
+
+#define RETURN_ON_FAIL_HR(x, pred, log, ...) { HRESULT hr = pred::test_hresult(x); if (FAILED(hr) { log(#x); log(__VA_ARGS__); return hr; } }
+#define RETURN_ON_FAIL_BOOL(x, pred, log, ...) { bool b = pred::test_bool(x); if (!b) { log(#x); log(__VA_ARGS__); return false; } }
+#define RETURN_ON_FAIL_VOID(x, pred, log, ...) { bool b = pred::test_bool(x); if (!b) { log(#x); log(__VA_ARGS__); return; } }
 
 #endif

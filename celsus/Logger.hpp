@@ -5,7 +5,6 @@
 #include <map>
 #include <set>
 #include <windows.h>
-#include "error2.hpp"
 
 /**
  * The Logger is designed to be a stand alone, drop in logging component. The class itself
