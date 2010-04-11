@@ -208,6 +208,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\celsus\string_utils.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\celsus\StringId.cpp"
 				>
 			</File>
@@ -274,6 +278,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\celsus\error2.hpp"
+				>
+			</File>
+			<File
 				RelativePath=".\celsus\ErrorHandling.hpp"
 				>
 			</File>
@@ -295,6 +303,10 @@
 			</File>
 			<File
 				RelativePath=".\celsus\stdafx.h"
+				>
+			</File>
+			<File
+				RelativePath=".\celsus\string_utils.hpp"
 				>
 			</File>
 			<File
