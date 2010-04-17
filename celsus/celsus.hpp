@@ -12,6 +12,15 @@
 #define MAKE_SCOPED(type) type GEN_NAME(ANON, __LINE__)
 // #define SCOPED_PROFILE(s) LogMgr::Scope GEN_NAME(log, __LINE__)(s);
 
+struct ScopedCs
+{
+	ScopedCs(CRITICAL_SECTION* cs) : _cs(cs) { EnterCriticalSection(_cs); }
+	~ScopedCs() { LeaveCriticalSection(_cs); }
+	CRITICAL_SECTION* _cs;
+};
+
+#define SCOPED_CS(x) MAKE_SCOPED(ScopedCs)(x);
+
 template<typename T>
 T xchg_null(T& t)
 {
