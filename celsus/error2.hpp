@@ -73,9 +73,9 @@ template<> struct ErrorPredicate<HRESULT>
 	}
 };
 
-#define RETURN_ON_FAIL_HR(x, pred, log) { HRESULT hr = pred::test_hresult(x); if (FAILED(hr) { log(#x); return hr; } }
-#define RETURN_ON_FAIL_BOOL(x, pred, log) { bool b = pred::test_bool(x); if (!b) { log(#x); return false; } }
-#define RETURN_ON_FAIL_VOID(x, pred, log) { bool b = pred::test_bool(x); if (!b) { log(#x); return; } }
-#define RETURN_ON_FAIL_PTR(x, pred, log) { bool b = pred::test_bool(x); if (!b) { log(#x); return NULL; } }
+#define RETURN_ON_FAIL_HR(x, pred, log) { HRESULT hr = pred::test_hresult(x); if (FAILED(hr) { log("%s(%d)", __FILE__, __LINE__); log(#x); return hr; } }
+#define RETURN_ON_FAIL_BOOL(x, pred, log) { bool b = pred::test_bool(x); if (!b) { log("%s(%d)", __FILE__, __LINE__); log(#x); return false; } }
+#define RETURN_ON_FAIL_VOID(x, pred, log) { bool b = pred::test_bool(x); if (!b) { log("%s(%d)", __FILE__, __LINE__); return; } }
+#define RETURN_ON_FAIL_PTR(x, pred, log) { bool b = pred::test_bool(x); if (!b) { log("%s(%d)", __FILE__, __LINE__); return NULL; } }
 
 #endif
