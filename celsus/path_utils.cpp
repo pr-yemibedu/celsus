@@ -64,3 +64,12 @@ std::string Path::get_filename_without_ext() const
 {
   return "";
 }
+
+std::string Path::get_full_path_name(const std::string& p)
+{
+	char buf[MAX_PATH];
+	GetFullPathName(p.c_str(), MAX_PATH, buf, NULL);
+	return buf;
+}
+
+
