@@ -47,4 +47,10 @@ void map_delete(T& container)
 
 #define ELEMS_IN_ARRAY(x) sizeof(x) / sizeof((x)[0])
 
+// A macro to disallow the copy constructor and operator= functions
+// This should be used in the private: declarations for a class
+#define DISALLOW_COPY_AND_ASSIGN(TypeName) \
+	TypeName(const TypeName&);               \
+	void operator=(const TypeName&)
+
 #endif // #ifndef CELSUS_HPP
