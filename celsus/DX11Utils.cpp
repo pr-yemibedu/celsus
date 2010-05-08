@@ -23,3 +23,12 @@ HRESULT create_static_index_buffer(ID3D11Device* device, const uint32_t index_co
   return create_static_buffer_inner(device, 
     CD3D11_BUFFER_DESC(index_count * index_size, D3D11_BIND_INDEX_BUFFER, D3D11_USAGE_IMMUTABLE), data, index_buffer);
 }
+
+void set_vb(ID3D11DeviceContext *context, ID3D11Buffer *buf, const uint32_t stride)
+{
+  UINT ofs[] = { 0 };
+  ID3D11Buffer* bufs[] = { buf };
+  uint32_t strides[] = { stride };
+  context->IASetVertexBuffers(0, 1, bufs, strides, ofs);
+}
+
