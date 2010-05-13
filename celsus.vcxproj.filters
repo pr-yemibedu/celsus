@@ -122,5 +122,8 @@
     <ClInclude Include="celsus\UnicodeUtils.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="celsus\D3D11Descriptions.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

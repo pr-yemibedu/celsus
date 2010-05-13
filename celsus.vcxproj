@@ -112,6 +112,7 @@
     <ClInclude Include="celsus\ChunkIO.hpp" />
     <ClInclude Include="celsus\D3D10Descriptions.hpp" />
     <ClInclude Include="celsus\D3D10Types.hpp" />
+    <ClInclude Include="celsus\D3D11Descriptions.hpp" />
     <ClInclude Include="celsus\DX10Utils.hpp" />
     <ClInclude Include="celsus\DX11Utils.hpp" />
     <ClInclude Include="celsus\error2.hpp" />
