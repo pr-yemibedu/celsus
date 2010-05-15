@@ -22,9 +22,15 @@ struct ScopedCs
 #define SCOPED_CS(x) MAKE_SCOPED(ScopedCs)(x);
 
 template<typename T>
-T xchg_null(T& t)
+T exch_null(T& t)
 {
   T tmp = t; t = NULL; return tmp;
+}
+
+template<typename T>
+T exch(T& a, T& b)
+{
+  T tmp = a; a = b; b = tmp; return tmp;
 }
 
 template<class T>

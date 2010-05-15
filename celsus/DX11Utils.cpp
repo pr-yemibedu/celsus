@@ -8,7 +8,7 @@ namespace
     D3D11_SUBRESOURCE_DATA init_data;
     ZeroMemory(&init_data, sizeof(init_data));
     init_data.pSysMem = data;
-    return device->CreateBuffer(&desc, &init_data, buffer);
+    return device->CreateBuffer(&desc, data ? &init_data : NULL, buffer);
   }
 }
 
@@ -16,6 +16,13 @@ HRESULT create_static_vertex_buffer(ID3D11Device* device, const uint32_t vertex_
 {
   return create_static_buffer_inner(device, 
     CD3D11_BUFFER_DESC(vertex_count * vertex_size, D3D11_BIND_VERTEX_BUFFER, D3D11_USAGE_IMMUTABLE), data, vertex_buffer);
+}
+
+HRESULT create_dynamic_vertex_buffer(ID3D11Device *device, const uint32_t vertex_count, const uint32_t vertex_size, ID3D11Buffer** vertex_buffer)
+{
+  return create_static_buffer_inner(device, 
+    CD3D11_BUFFER_DESC(vertex_count * vertex_size, D3D11_BIND_VERTEX_BUFFER, D3D11_USAGE_DYNAMIC, D3D11_CPU_ACCESS_WRITE), NULL, vertex_buffer);
+
 }
 
 HRESULT create_static_index_buffer(ID3D11Device* device, const uint32_t index_count, const uint32_t index_size, const uint8_t* data, ID3D11Buffer** index_buffer) 
