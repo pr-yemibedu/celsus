@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "celsus.hpp"
 
-uint8_t* load_file(const char* filename, const bool zero_terminate, uint32_t* len)
+uint8_t* load_file_inner(const char* filename, const bool zero_terminate, uint32_t* len)
 {
 	const HANDLE file_handle = CreateFileA(filename, GENERIC_READ, FILE_SHARE_READ, NULL, 
 		OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
@@ -24,27 +24,14 @@ uint8_t* load_file(const char* filename, const bool zero_terminate, uint32_t* le
 	return buf;
 }
 
-bool load_file(uint8_t*& buf, uint32_t& len, const char* filename, const bool zero_terminate)
+uint8_t* load_file(const char* filename, uint32_t* len)
 {
-  const HANDLE file_handle = CreateFileA(filename, GENERIC_READ, FILE_SHARE_READ, NULL, 
-    OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-  if (file_handle == INVALID_HANDLE_VALUE) {
-    return false;
-  }
+  return load_file_inner(filename, false, len);
+}
 
-  const uint32_t file_size = GetFileSize(file_handle, NULL);
-  len = file_size + (zero_terminate ? 1 : 0);
-  buf = new BYTE[len];
-  DWORD bytes_read = 0;
-  if (!ReadFile(file_handle, buf, file_size, &bytes_read, NULL) || bytes_read != file_size) {
-    return false;
-  }
-
-  CloseHandle(file_handle);
-  if (zero_terminate) {
-    buf[file_size] = 0;
-  }
-  return true;
+uint8_t* load_file_with_zero_terminate(const char* filename, uint32_t* len)
+{
+  return load_file_inner(filename, true, len);
 }
 
 bool write_file(const uint8_t* buf, const uint32_t len, const char* filename)

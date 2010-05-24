@@ -101,6 +101,7 @@
     <ClCompile Include="celsus\string_utils.cpp" />
     <ClCompile Include="celsus\StringId.cpp" />
     <ClCompile Include="celsus\StringIdTable.cpp" />
+    <ClCompile Include="celsus\text_scanner.cpp" />
     <ClCompile Include="celsus\tinyjson.cpp" />
     <ClCompile Include="celsus\UnicodeUtils.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -132,6 +133,7 @@
     <ClInclude Include="celsus\StringId.hpp" />
     <ClInclude Include="celsus\StringIdTable.hpp" />
     <ClInclude Include="celsus\targetver.h" />
+    <ClInclude Include="celsus\text_scanner.hpp" />
     <ClInclude Include="celsus\Timer.hpp" />
     <ClInclude Include="celsus\tinyjson.hpp" />
     <ClInclude Include="celsus\UnicodeUtils.hpp" />

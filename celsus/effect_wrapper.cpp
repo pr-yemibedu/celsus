@@ -36,7 +36,8 @@ bool EffectWrapper::load_inner(const char* filename, const char* entry_point, bo
 {
 	uint8_t* buf = NULL;
 	uint32_t len = 0;
-	load_file(buf, len, filename);
+	if ((buf = load_file(filename, &len)) == NULL)
+    return false;
 
 	ID3DBlob* error_blob = NULL;
 

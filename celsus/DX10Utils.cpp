@@ -6,9 +6,10 @@
 
 ID3D10Effect* load_effect(const char* filename, ID3D10Device* device)
 {
-  uint8_t* hlsl = NULL;
   uint32_t len = 0;
-  if (!load_file(hlsl, len, filename, true)) {
+  uint8_t* hlsl = load_file_with_zero_terminate(filename, &len);
+  
+  if (!hlsl) {
     LOG_WARNING_LN("Error loading file: %s", filename);
     return NULL;
   }

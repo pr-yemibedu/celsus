@@ -32,7 +32,7 @@ namespace json
     SCOPED_FUNC_PROFILE();
     uint8_t* buf = NULL;
     uint32_t len = 0;
-    if (!::load_file(buf, len, filename, true)) {
+    if ((buf = ::load_file_with_zero_terminate(filename, &len)) == NULL) {
       elem = json_element::kInvalidElement;
       return false;
     }
