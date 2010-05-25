@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "text_scanner.hpp"
+#include "CelsusExtra.hpp"
 
 bool is_whitespace(char ch)
 {
@@ -13,7 +14,7 @@ bool is_newline(char ch)
 
 bool is_digit(const char ch)
 {
-  return ch >= '0' && ch < '9';
+  return ch >= '0' && ch <= '9';
 }
 
 // find the next parsable char
@@ -41,6 +42,15 @@ const char *scan_read_line(const char *buf, const char *buf_end, int *len)
     ++e;
   if (len) *len = e - buf;
   return buf;
+}
+
+const char *scan_read_line2(const char *buf, const char *buf_end, int *len)
+{
+	const char *e = buf;
+	while (e <= buf_end && !is_newline(*e))
+		++e;
+	if (len) *len = e - buf;
+	return buf;
 }
 
 const char *scan_skip_char(const char *buf, const char *buf_end, char ch)
@@ -159,21 +169,173 @@ const char *scan_get_between(const char *buf, const char *buf_end, const char st
   return *len == 0 ? NULL : s + 1;
 }
 
-
-void parse_floats(const char *buf, const char *buf_end, std::vector<float>* out)
+const char *skip_chars(const char *buf, const char *buf_end, const char *tokens)
 {
-  float f;
-  while (buf && (buf = scan_parse_float(buf, buf_end, &f)) != NULL) {
-    out->push_back(f);
-    buf = scan_skip_char(buf, buf_end, ',');
-  }
+	bool found = true;
+	while (*buf && buf <= buf_end && found) {
+		found = false;
+		for (int i = 0; tokens[i] && !found; ++i) {
+			if (tokens[i] == *buf)
+				found = true;
+		}
+		if (!found)
+			break;
+		++buf;
+	}
+	return buf;
 }
 
-void parse_ints(const char *buf, const char *buf_end, std::vector<int>* out)
+
+const char *parse_floats(const char *buf, const char *buf_end, std::vector<float>* out)
+{
+  float f;
+	const char *tmp = NULL;
+  while (buf && (buf = scan_parse_float(buf, buf_end, &f)) != NULL && (tmp = buf) != NULL) {
+    out->push_back(f);
+    buf = skip_chars(buf, buf_end, ", \t");
+  }
+	return tmp;
+}
+
+const char *parse_ints(const char *buf, const char *buf_end, std::vector<int>* out)
 {
   int i;
-  while (buf && (buf = scan_parse_int(buf, buf_end, &i)) != NULL) {
+	const char *tmp = NULL;
+  while (buf && (buf = scan_parse_int(buf, buf_end, &i)) != NULL && (tmp = buf) != NULL) {
     out->push_back(i);
-    buf = scan_skip_char(buf, buf_end, ',');
+    buf = skip_chars(buf, buf_end, ", \t");
   }
+	return tmp;
+}
+
+
+TextScanner::TextScanner()
+	: _buf(NULL)
+	, _buf_end(NULL)
+	, _cur(NULL)
+	, _prev(NULL)
+	, _len(0)
+{
+
+}
+
+bool TextScanner::load(const char *filename)
+{
+	_buf = _cur = _prev = (char *)load_file(filename, &_len);
+	if (!_buf)
+		return false;
+	_buf_end = _buf + _len - 1;
+	return true;
+}
+
+void TextScanner::reset()
+{
+	_cur = _prev = _buf;
+}
+
+bool TextScanner::read_float(float *res)
+{
+	if (!_buf)
+		return false;
+
+	_prev = _cur;
+	return (_cur = scan_parse_float(_cur, _buf_end, res)) != NULL;
+}
+
+bool TextScanner::skip_line()
+{
+	return true;
+}
+
+bool TextScanner::read_line(const char **res, int *len)
+{
+	if (!_cur || _cur > _buf_end)
+		return false;
+
+	_prev = _cur;
+
+	if ((*res = scan_read_line2(_cur, _buf_end, len)) == NULL)
+		return false;
+
+	skip_to_next_line();
+
+	return true;
+}
+
+bool TextScanner::skip_to_next_line()
+{
+	if (eof())
+		return false;
+
+	while (*_cur && _cur <= _buf_end && !(*_cur == '\r' || *_cur == '\n'))
+		_cur++;
+
+	bool skipped = false;
+	while (*_cur && _cur <= _buf_end && (*_cur == '\r' || *_cur == '\n')) {
+		skipped = true;
+		_cur++;
+	}
+	return skipped;
+}
+
+bool TextScanner::skip_chars(const char *tokens)
+{
+	if (eof())
+		return false;
+
+	bool found = true;
+	bool found_any = false;
+	while (*_cur && _cur <= _buf_end && found) {
+		found = false;
+		// check if the current char is one of the skip tokens
+		for (int i = 0; tokens[i] && !found; ++i) {
+			if (tokens[i] == *_cur)
+				found = true;
+		}
+		found_any |= found;
+		if (!found)
+			break;
+		++_cur;
+	}
+	return found_any;
+}
+
+bool TextScanner::read_floats(std::vector<float>* out)
+{
+	if (eof())
+		return false;
+
+	_prev = _cur;
+
+	_cur = parse_floats(_cur, _buf_end, out);
+	return !out->empty();
+}
+
+bool TextScanner::read_ints(std::vector<int>* out)
+{
+	if (eof())
+		return false;
+
+	_prev = _cur;
+
+	_cur = ::parse_ints(_cur, _buf_end, out);
+	return !out->empty();
+}
+
+void TextScanner::rewind()
+{
+	_cur = _prev;
+}
+
+bool TextScanner::eof() const
+{
+	return !_cur || _cur > _buf_end;
+}
+
+bool TextScanner::peek(char *res)
+{
+	if (eof())
+		return false;
+	*res = *_cur;
+	return true;
 }
