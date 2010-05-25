@@ -124,6 +124,7 @@
     <ClInclude Include="celsus\ErrorHandling.hpp" />
     <ClInclude Include="celsus\graphics.hpp" />
     <ClInclude Include="celsus\Logger.hpp" />
+    <ClInclude Include="celsus\math_utils.hpp" />
     <ClInclude Include="celsus\MemoryMappedFile.hpp" />
     <ClInclude Include="celsus\path_utils.hpp" />
     <ClInclude Include="celsus\Profiler.hpp" />
