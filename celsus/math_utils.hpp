@@ -25,3 +25,8 @@ inline D3DXVECTOR3 vec3_normalize(const D3DXVECTOR3& a)
     res = a / len;
   return res;
 }
+
+float inline deg_to_rad(const float deg)
+{
+	return (float)D3DX_PI * deg / 180.0f;
+}
