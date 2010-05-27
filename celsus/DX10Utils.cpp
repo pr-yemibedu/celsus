@@ -2,7 +2,7 @@
 #include "DX10Utils.hpp"
 #include "celsus.hpp"
 #include "Logger.hpp"
-#include "CelsusExtra.hpp"
+#include "file_utils.hpp"
 
 ID3D10Effect* load_effect(const char* filename, ID3D10Device* device)
 {

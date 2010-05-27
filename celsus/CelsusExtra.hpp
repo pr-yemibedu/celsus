@@ -57,11 +57,6 @@ typename Container::const_iterator SafeFind(const Container& container, typename
 }
 
 
-uint8_t* load_file(const char* filename, uint32_t* len);
-uint8_t* load_file_with_zero_terminate(const char* filename, uint32_t* len);
-
-//bool load_file(uint8_t*& buf, uint32_t& len, const char* filename, const bool zero_terminate = false);
-bool write_file(const uint8_t* buf, const uint32_t len, const char* filename);
 
 
 float randf(const float min_value, const float max_value);

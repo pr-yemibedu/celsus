@@ -88,6 +88,7 @@
     <ClCompile Include="celsus\DX10Utils.cpp" />
     <ClCompile Include="celsus\DX11Utils.cpp" />
     <ClCompile Include="celsus\effect_wrapper.cpp" />
+    <ClCompile Include="celsus\file_utils.cpp" />
     <ClCompile Include="celsus\graphics.cpp" />
     <ClCompile Include="celsus\Logger.cpp" />
     <ClCompile Include="celsus\MemoryMappedFile.cpp" />
@@ -122,6 +123,7 @@
     <ClInclude Include="celsus\effect_wrapper.hpp" />
     <ClInclude Include="celsus\error2.hpp" />
     <ClInclude Include="celsus\ErrorHandling.hpp" />
+    <ClInclude Include="celsus\file_utils.hpp" />
     <ClInclude Include="celsus\graphics.hpp" />
     <ClInclude Include="celsus\Logger.hpp" />
     <ClInclude Include="celsus\math_utils.hpp" />

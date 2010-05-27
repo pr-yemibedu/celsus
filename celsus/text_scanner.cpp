@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "text_scanner.hpp"
-#include "CelsusExtra.hpp"
+#include "file_utils.hpp"
 
 bool is_whitespace(char ch)
 {

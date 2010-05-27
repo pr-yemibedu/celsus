@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "effect_wrapper.hpp"
 #include "graphics.hpp"
-#include "CelsusExtra.hpp"
+#include "file_utils.hpp"
 
 EffectWrapper::EffectWrapper()
 {

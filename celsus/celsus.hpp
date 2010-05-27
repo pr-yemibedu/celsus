@@ -1,6 +1,8 @@
 #ifndef CELSUS_HPP
 #define CELSUS_HPP
 
+#include <functional>
+
 #define SAFE_RELEASE(x) if( (x) != 0 ) { (x)->Release(); (x) = 0; }
 #define SAFE_FREE(x) if( (x) != 0 ) { free((void*)(x)); (x) = 0; }
 #define SAFE_DELETE(x) if( (x) != 0 ) { delete (x); (x) = 0; }
@@ -12,6 +14,16 @@
 #define MAKE_SCOPED(type) type GEN_NAME(ANON, __LINE__)
 // #define SCOPED_PROFILE(s) LogMgr::Scope GEN_NAME(log, __LINE__)(s);
 
+// Calls fn when it goes out of scope. With lambda functions in C++0x this is actually
+// pretty useful
+struct ScopedObj
+{
+  typedef std::function<void()> Fn;
+  ScopedObj(const Fn& fn) : fn(fn) {}
+  ~ScopedObj() { fn(); }
+  const Fn& fn;
+};
+
 struct ScopedCs
 {
 	ScopedCs(CRITICAL_SECTION* cs) : _cs(cs) { EnterCriticalSection(_cs); }
@@ -19,7 +31,8 @@ struct ScopedCs
 	CRITICAL_SECTION* _cs;
 };
 
-#define SCOPED_CS(x) MAKE_SCOPED(ScopedCs)(x);
+#define SCOPED_CS(x) MAKE_SCOPED(ScopedCs)((x));
+#define SCOPED_OBJ(x) MAKE_SCOPED(ScopedObj)((x));
 
 template<typename T>
 T exch_null(T& t)

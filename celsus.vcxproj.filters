@@ -69,6 +69,9 @@
     <ClCompile Include="celsus\text_scanner.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="celsus\file_utils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="celsus\celsus.hpp">
@@ -150,6 +153,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="celsus\math_utils.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="celsus\file_utils.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
