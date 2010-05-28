@@ -72,4 +72,15 @@ std::string Path::get_full_path_name(const std::string& p)
 	return buf;
 }
 
+std::string Path::replace_extension(const std::string& path, const std::string& ext)
+{
+  std::string res;
+  const char *slash = path.c_str();
+  while (*slash && *slash++ != '.')
+    ;
+
+  if (*slash)
+    res = std::string(path.c_str(), slash - path.c_str()) + ext;
+  return res;
+}
 

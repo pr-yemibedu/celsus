@@ -64,11 +64,11 @@ bool Graphics::create_back_buffers(int width, int height)
     _swap_chain->ResizeBuffers(1, width, height, _buffer_format, 0);
 
   // Get the dx11 back buffer
-  RETURN_ON_FAIL_BOOL(_swap_chain->GetBuffer(0, IID_PPV_ARGS(&_back_buffer)), ErrorPredicate<HRESULT>, LOG_ERROR_LN);
+  RETURN_ON_FAIL_BOOL(_swap_chain->GetBuffer(0, IID_PPV_ARGS(&_back_buffer)), LOG_ERROR_LN);
   D3D11_TEXTURE2D_DESC back_buffer_desc;
   _back_buffer->GetDesc(&back_buffer_desc);
 
-  RETURN_ON_FAIL_BOOL(_device->CreateRenderTargetView(_back_buffer, NULL, &_render_target_view), ErrorPredicate<HRESULT>, LOG_ERROR_LN);
+  RETURN_ON_FAIL_BOOL(_device->CreateRenderTargetView(_back_buffer, NULL, &_render_target_view), LOG_ERROR_LN);
 
   // depth buffer
   D3D11_TEXTURE2D_DESC depthBufferDesc;
@@ -84,8 +84,8 @@ bool Graphics::create_back_buffers(int width, int height)
   depthBufferDesc.CPUAccessFlags = 0;
   depthBufferDesc.MiscFlags = 0;
 
-  RETURN_ON_FAIL_BOOL(_device->CreateTexture2D(&depthBufferDesc, NULL, &_depth_stencil), ErrorPredicate<HRESULT>, LOG_ERROR_LN);
-  RETURN_ON_FAIL_BOOL(_device->CreateDepthStencilView(_depth_stencil, NULL, &_depth_stencil_view), ErrorPredicate<HRESULT>, LOG_ERROR_LN);
+  RETURN_ON_FAIL_BOOL(_device->CreateTexture2D(&depthBufferDesc, NULL, &_depth_stencil), LOG_ERROR_LN);
+  RETURN_ON_FAIL_BOOL(_device->CreateDepthStencilView(_depth_stencil, NULL, &_depth_stencil_view), LOG_ERROR_LN);
 
   _viewport = CD3D11_VIEWPORT (0.0f, 0.0f, (float)_width, (float)_height);
 
@@ -129,7 +129,7 @@ bool Graphics::init_directx(const HWND hwnd, const int width, const int height)
 	// Create the DX11 device
 	RETURN_ON_FAIL_BOOL(D3D11CreateDeviceAndSwapChain(
 		adapter, D3D_DRIVER_TYPE_UNKNOWN, NULL, flags, NULL, 0, D3D11_SDK_VERSION, &sd, &_swap_chain, &_device, &_feature_level, &_immediate_context),
-    ErrorPredicate<HRESULT>, LOG_ERROR_LN);
+    LOG_ERROR_LN);
 
 	if (_feature_level < D3D_FEATURE_LEVEL_9_3) {
     LOG_ERROR_LN("Card must support at least D3D_FEATURE_LEVEL_9_3");

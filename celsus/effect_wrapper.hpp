@@ -90,7 +90,7 @@ private:
     {
       ID3D11ShaderReflection* reflector = NULL; 
       RETURN_ON_FAIL_BOOL(D3DReflect(_blob->GetBufferPointer(), _blob->GetBufferSize(), IID_ID3D11ShaderReflection, (void**)&reflector),
-        ErrorPredicate<HRESULT>, LOG_ERROR_LN);
+        LOG_ERROR_LN);
       D3D11_SHADER_DESC shader_desc;
       reflector->GetDesc(&shader_desc);
 
@@ -112,7 +112,7 @@ private:
           cur_cb = it->second;
         } else {
           ID3D11Buffer *cb = NULL;
-          RETURN_ON_FAIL_BOOL(Graphics::instance().device()->CreateBuffer(&bb, NULL, &cb), ErrorPredicate<HRESULT>, LOG_ERROR_LN);
+          RETURN_ON_FAIL_BOOL(Graphics::instance().device()->CreateBuffer(&bb, NULL, &cb), LOG_ERROR_LN);
           cur_cb = new ConstantBuffer(d.Name, cb, bb);
           created = true;
         }

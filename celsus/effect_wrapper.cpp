@@ -67,7 +67,7 @@ bool EffectWrapper::load_inner(const char* filename, const char* entry_point, bo
 			return false;
 		}
 		RETURN_ON_FAIL_BOOL(Graphics::instance().device()->CreateVertexShader(_vs._blob->GetBufferPointer(), _vs._blob->GetBufferSize(), NULL, &_vs._shader),
-			ErrorPredicate<HRESULT>, LOG_ERROR_LN);
+			LOG_ERROR_LN);
 
 	} else {
 		if (FAILED(D3DCompile(buf, len, filename, NULL, NULL, entry_point, ps.c_str(), D3D10_SHADER_ENABLE_STRICTNESS, 0, &_ps._blob, &error_blob))) {
@@ -75,10 +75,10 @@ bool EffectWrapper::load_inner(const char* filename, const char* entry_point, bo
 			return false;
 		}
 		RETURN_ON_FAIL_BOOL(Graphics::instance().device()->CreatePixelShader(_ps._blob->GetBufferPointer(), _ps._blob->GetBufferSize(), NULL, &_ps._shader),
-			ErrorPredicate<HRESULT>, LOG_ERROR_LN);
+			LOG_ERROR_LN);
 	}
 
-	RETURN_ON_FAIL_BOOL(do_reflection(), ErrorPredicate<bool>, LOG_ERROR_LN);
+	RETURN_ON_FAIL_BOOL(do_reflection(), LOG_ERROR_LN);
 
   _filename = filename;
   return true;
@@ -139,7 +139,7 @@ ID3D11InputLayout* EffectWrapper::create_input_layout(const D3D11_INPUT_ELEMENT_
 	ID3D11InputLayout* layout = NULL;
 
 	RETURN_ON_FAIL_PTR(Graphics::instance().device()->CreateInputLayout(elems, num_elems, _vs._blob->GetBufferPointer(), _vs._blob->GetBufferSize(), &layout),
-		ErrorPredicate<HRESULT>, LOG_ERROR_LN);
+		LOG_ERROR_LN);
 	return layout;
 }
 

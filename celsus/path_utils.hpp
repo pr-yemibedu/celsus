@@ -13,6 +13,9 @@ public:
   std::string get_filename_without_ext() const;
 	static std::string make_canonical(const std::string& str);
 	static std::string get_full_path_name(const std::string& p);
+
+  static std::string replace_extension(const std::string& path, const std::string& ext);
+
 private:
   std::string _str;
   int _file_ofs;
