@@ -21,7 +21,7 @@ struct ScopedObj
   typedef std::function<void()> Fn;
   ScopedObj(const Fn& fn) : fn(fn) {}
   ~ScopedObj() { fn(); }
-  const Fn& fn;
+  Fn fn;
 };
 
 struct ScopedCs
