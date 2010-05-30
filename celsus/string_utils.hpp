@@ -3,4 +3,44 @@
 
 bool ends_with(const char* str_to_test, const char* ending);
 
+// So, I finally bit the bullet and decided to write my own string class.
+// This isn't STL-compliant, and right now I don't have any need
+// for something that's UTF-8, so I'll just hack at this, and see how it works
+class string2
+{
+public:
+	string2();
+	~string2();
+
+	// assignment
+	string2(const char *data);
+	string2(const std::string& str);
+	string2(const string2& str);
+	string2& operator=(const string2& str);
+	operator const char *();
+
+	// comparison
+	bool operator==(const string2& str) const;
+	bool operator==(const char *str) const;
+
+	int size() const { return _len; }
+	bool empty() const { return _len == 0; }
+	long long hash() const;
+
+	static string2 fmt(const char *format, ...);
+private:
+	void assign(const char *data);
+	char *_data;
+	int _len;
+};
+
+template<>
+struct std::less<string2>
+{
+	bool operator()(const string2& a, const string2& b)
+	{
+		return a.hash() < b.hash();
+	}
+};
+
 #endif

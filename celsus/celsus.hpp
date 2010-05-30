@@ -2,6 +2,7 @@
 #define CELSUS_HPP
 
 #include <functional>
+#include <windows.h>
 
 #define SAFE_RELEASE(x) if( (x) != 0 ) { (x)->Release(); (x) = 0; }
 #define SAFE_FREE(x) if( (x) != 0 ) { free((void*)(x)); (x) = 0; }

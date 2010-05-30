@@ -1,5 +1,6 @@
 #ifndef _PATH_UTILS_HPP_
 #define _PATH_UTILS_HPP_
+#include <string>
 
 class Path
 {

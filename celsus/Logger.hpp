@@ -49,6 +49,7 @@ public:
 
   void debug_output(const bool newLine, const bool one_shot, const char *file, const int line, const Severity severity, const char* const format, ...  );
 
+	LogMgr& print_file_and_line(const bool value);
   LogMgr& enable_output(OuputDevice output);
   LogMgr& disable_output(OuputDevice output);
   LogMgr& open_output_file(const char* pFilename);
@@ -66,13 +67,14 @@ private:
 
   void    init_severity_map();
 
-  int   output_device_;
-  FILE* file_;
-  bool break_on_error_;
+	FILE* _file;
+  int   _output_device;
+  bool _break_on_error;
+	bool _output_line_numbers;
 
   std::set<std::string> one_shot_set_;
   std::map<OuputDevice, std::map<Severity, bool> > severity_map_;
-  static LogMgr* instance_;
+  static LogMgr* _instance;
 };
 
 #endif

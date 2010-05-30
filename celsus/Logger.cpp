@@ -4,12 +4,13 @@
 #include "CelsusExtra.hpp"
 #include "path_utils.hpp"
 
-LogMgr* LogMgr::instance_ = NULL;
+LogMgr* LogMgr::_instance = NULL;
 
 LogMgr::LogMgr() 
-  : file_(0)
-  , output_device_(Debugger | File)
-  , break_on_error_(false)
+  : _file(0)
+  , _output_device(Debugger | File)
+  , _break_on_error(false)
+	, _output_line_numbers(true)
 {
   init_severity_map();
 }
@@ -18,8 +19,8 @@ LogMgr::~LogMgr()
 {
   severity_map_.clear();
 
-  if (file_ != NULL)
-    fclose(file_);
+  if (_file != NULL)
+    fclose(_file);
 }
 
 void LogMgr::debug_output( const bool new_line, const bool one_shot, const char *file, const int line, const Severity severity, const char* const format, ...  ) 
@@ -43,13 +44,13 @@ void LogMgr::debug_output( const bool new_line, const bool one_shot, const char 
     one_shot_set_.insert(buf);
   }
 
-  std::string str = to_string("%s(%d): %s", file, line, buf);
+  std::string str = _output_line_numbers ? to_string("%s(%d): %s", file, line, buf) : buf;
 
-  if ((output_device_ & LogMgr::Debugger) && severity_map_[LogMgr::Debugger][severity])
+  if ((_output_device & LogMgr::Debugger) && severity_map_[LogMgr::Debugger][severity])
     OutputDebugStringA(str.c_str());
 
-  if (output_device_ & File) {
-    if (!file_) {
+  if (_output_device & File) {
+    if (!_file) {
       // no output file has been specified, so we use the current module as name
       char buf[MAX_PATH+1];
       buf[MAX_PATH] = 0;
@@ -58,50 +59,50 @@ void LogMgr::debug_output( const bool new_line, const bool one_shot, const char 
     }
   }
 
-  if (file_ && (output_device_ & LogMgr::File) && severity_map_[LogMgr::File][severity]) {
-    fputs(str.c_str(), file_);
-    fflush(file_);
+  if (_file && (_output_device & LogMgr::File) && severity_map_[LogMgr::File][severity]) {
+    fputs(str.c_str(), _file);
+    fflush(_file);
   }
 
   va_end(arg);
 
-  if (break_on_error_ && severity >= LogMgr::Error) 
+  if (_break_on_error && severity >= LogMgr::Error) 
     __asm int 3;
 }
 
 LogMgr& LogMgr::instance() 
 {
-  if (instance_ == NULL) {
-    instance_ = new LogMgr();
+  if (_instance == NULL) {
+    _instance = new LogMgr();
     atexit(close);
   }
-  return *instance_;
+  return *_instance;
 }
 
 void LogMgr::close()
 {
-  SAFE_DELETE(instance_);
+  SAFE_DELETE(_instance);
 }
 
 LogMgr& LogMgr::enable_output(OuputDevice output) 
 {
-  output_device_ |= output;
+  _output_device |= output;
   return *this;
 }
 
 LogMgr& LogMgr::disable_output(OuputDevice output) 
 {
-  output_device_ &= ~output;
+  _output_device &= ~output;
   return *this;
 }
 
 LogMgr& LogMgr::open_output_file(const char* pFilename) 
 {
   // close open file
-  if (file_ != 0)
-    fclose(file_);
+  if (_file != 0)
+    fclose(_file);
 
-  if (0 != fopen_s(&file_, pFilename, "at")) {
+  if (0 != fopen_s(&_file, pFilename, "at")) {
     // error opening file
     return *this;
   }
@@ -117,13 +118,13 @@ LogMgr& LogMgr::open_output_file(const char* pFilename)
   }
   strftime(buf, 80, "%H:%M:%S (%Y-%m-%d)", &timeInfo);
 
-  fputs("*****************************************************\n", file_);
-  fputs("****\n", file_);
-  fprintf(file_, "**** Started at: %s\n", buf);
-  fputs("****\n", file_);
-  fputs("*****************************************************\n", file_);
+  fputs("*****************************************************\n", _file);
+  fputs("****\n", _file);
+  fprintf(_file, "**** Started at: %s\n", buf);
+  fputs("****\n", _file);
+  fputs("*****************************************************\n", _file);
 
-  fflush(file_);
+  fflush(_file);
 
   return *this;
 }
@@ -157,6 +158,12 @@ LogMgr& LogMgr::disable_severity(const OuputDevice output, const Severity severi
 
 LogMgr& LogMgr::break_on_error(const bool setting) 
 {
-  break_on_error_ = setting;
+  _break_on_error = setting;
   return *this;
+}
+
+LogMgr& LogMgr::print_file_and_line(const bool value)
+{
+	_output_line_numbers = value;		
+	return *this;
 }
