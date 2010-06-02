@@ -18,14 +18,20 @@ public:
 	string2(const string2& str);
 	string2& operator=(const string2& str);
 	operator const char *();
+	operator const char *() const;
 
 	// comparison
 	bool operator==(const string2& str) const;
 	bool operator==(const char *str) const;
+	bool operator==(const std::string& str) const;
+	bool operator!=(const string2& str) const;
+	bool operator!=(const char *str) const;
+	bool operator!=(const std::string& str) const;
 
 	int size() const { return _len; }
 	bool empty() const { return _len == 0; }
-	long long hash() const;
+	size_t hash() const;
+	operator size_t() const { return hash(); }
 
 	static string2 fmt(const char *format, ...);
 private:
@@ -37,7 +43,7 @@ private:
 template<>
 struct std::less<string2>
 {
-	bool operator()(const string2& a, const string2& b)
+	bool operator()(const string2& a, const string2& b) const
 	{
 		return a.hash() < b.hash();
 	}

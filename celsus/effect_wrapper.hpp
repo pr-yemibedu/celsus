@@ -3,6 +3,7 @@
 
 #include "Logger.hpp"
 #include "error2.hpp"
+#include "string_utils.hpp"
 
 #include <hash_map>
 
@@ -12,22 +13,21 @@ public:
   EffectWrapper();
   ~EffectWrapper();
 
-	bool	load_vertex_shader(const char* filename, const char* entry_point);
-	bool	load_pixel_shader(const char* filename, const char* entry_point);
-
-  // load both vertex and pixel shader
-  bool  load_shaders(const char *filename, const char *vs, const char *ps);
+	bool  load_shaders(const char *filename, const char *vs, const char *gs, const char *ps);
 
   void  set_shaders(ID3D11DeviceContext *context);
 
   template<typename T> 
-  bool	set_vs_variable(const std::string& name, const T& value) { return _vs.set_variable<T>(name, value); }
+  bool	set_vs_variable(const string2& name, const T& value) { return _vs.set_variable<T>(name, value); }
 
   template<typename T> 
-  bool	set_ps_variable(const std::string& name, const T& value) { return _ps.set_variable<T>(name, value); }
+  bool	set_ps_variable(const string2& name, const T& value) { return _ps.set_variable<T>(name, value); }
+
+	template<typename T> 
+	bool	set_gs_variable(const string2& name, const T& value) { return _gs.set_variable<T>(name, value); }
 
   void  unmap_buffers();
-  bool  set_resource(const std::string& name, ID3D11ShaderResourceView* resource);
+  bool  set_resource(const string2& name, ID3D11ShaderResourceView* resource);
 
 	void set_cbuffer();
 
@@ -36,17 +36,18 @@ public:
 
 	ID3D11VertexShader* vertex_shader() { return _vs._shader; }
 	ID3D11PixelShader* pixel_shader() { return _ps._shader; }
+	ID3D11GeometryShader *geometry_shader() { _gs._shader; }
 
 private:
 
   struct ConstantBuffer
   {
-    ConstantBuffer(const std::string& name, ID3D11Buffer* buffer, const D3D11_BUFFER_DESC& desc)
+    ConstantBuffer(const string2& name, ID3D11Buffer* buffer, const D3D11_BUFFER_DESC& desc)
       : _name(name), _mapped(false), _desc(desc) 
     {
       _buffer.Attach(buffer);
     }
-    std::string _name;
+    string2 _name;
     bool _mapped;
     D3D11_MAPPED_SUBRESOURCE _resource;
     CComPtr<ID3D11Buffer> _buffer;
@@ -55,27 +56,28 @@ private:
 
   struct BufferVariable
   {
-    BufferVariable(const std::string& name, ConstantBuffer* buffer, const D3D11_SHADER_VARIABLE_DESC& vd, const D3D11_SHADER_TYPE_DESC& td)
+    BufferVariable(const string2& name, ConstantBuffer* buffer, const D3D11_SHADER_VARIABLE_DESC& vd, const D3D11_SHADER_TYPE_DESC& td)
       : _name(name), _buffer(buffer), _var_desc(vd), _type_desc(td)
     {
     }
-    std::string _name;
+    string2 _name;
     ConstantBuffer* _buffer;
     D3D11_SHADER_VARIABLE_DESC _var_desc;
     D3D11_SHADER_TYPE_DESC _type_desc;
   };
 
-  typedef std::string BufferName;
-  typedef std::string VariableName;
+  typedef string2 BufferName;
+  typedef string2 VariableName;
   typedef std::map< BufferName, ConstantBuffer* > ConstantBuffers;
   typedef stdext::hash_map< VariableName, BufferVariable* > BufferVariables;
-	typedef stdext::hash_map< std::string, D3D11_SHADER_INPUT_BIND_DESC > BoundTextures;
-	typedef stdext::hash_map< std::string, D3D11_SHADER_INPUT_BIND_DESC > BoundSamplers;
+	typedef stdext::hash_map< string2, D3D11_SHADER_INPUT_BIND_DESC > BoundTextures;
+	typedef stdext::hash_map< string2, D3D11_SHADER_INPUT_BIND_DESC > BoundSamplers;
 
-	bool	load_inner(const char* filename, const char* entry_point, bool vertex_shader);
-	bool do_reflection();
+	enum ShaderType { VertexShader, GeometryShader, PixelShader};
 
-  std::string _filename;
+	bool	load_inner(const char* filename, const char* entry_point, ShaderType type);
+
+  string2 _filename;
 
   template<class T>
   struct Shader
@@ -147,19 +149,19 @@ private:
       return true;
     }
 
-    template<typename U> bool set_variable(const std::string& name, const U& value)
+    template<typename U> bool set_variable(const string2& name, const U& value)
     {
       // find variable
       BufferVariables::iterator it = _buffer_variables.find(name);
       if (it == _buffer_variables.end()) {
-        LOG_WARNING_LN("Variable not found: %s", name.c_str());
+        LOG_WARNING_LN_ONESHOT("Variable not found: %s", name);
         return false;
       }
 
       BufferVariable* var = it->second;
       // check the size
       if (var->_var_desc.Size != sizeof(U)) {
-        LOG_WARNING_LN("Variable size doesn't match: %s", name.c_str());
+        LOG_WARNING_LN_ONESHOT("Variable size doesn't match: %s", name);
         return false;
       }
 
@@ -199,6 +201,7 @@ private:
 
   Shader<ID3D11VertexShader> _vs;
   Shader<ID3D11PixelShader> _ps;
+	Shader<ID3D11GeometryShader> _gs;
 };
 
 #endif

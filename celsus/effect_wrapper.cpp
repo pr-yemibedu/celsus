@@ -11,28 +11,21 @@ EffectWrapper::~EffectWrapper()
 {
 }
 
-bool EffectWrapper::load_shaders(const char *filename, const char *vs, const char *ps)
+bool EffectWrapper::load_shaders(const char *filename, const char *vs, const char *gs, const char *ps)
 {
-  if (!load_vertex_shader(filename, vs))
-    return false;
+	if (vs && !load_inner(filename, vs, VertexShader))
+		return false;
 
-  if (!load_pixel_shader(filename, ps))
-    return false;
+	if (gs && !load_inner(filename, gs, GeometryShader))
+		return false;
 
-  return true;
+	if (ps && !load_inner(filename, ps, PixelShader))
+		return false;
+
+	return true;
 }
 
-bool EffectWrapper::load_vertex_shader(const char* filename, const char* entry_point)
-{
-	return load_inner(filename, entry_point, true);
-}
-
-bool EffectWrapper::load_pixel_shader(const char* filename, const char* entry_point)
-{
-	return load_inner(filename, entry_point, false);
-}
-
-bool EffectWrapper::load_inner(const char* filename, const char* entry_point, bool vertex_shader)
+bool EffectWrapper::load_inner(const char* filename, const char* entry_point, ShaderType type)
 {
 	uint8_t* buf = NULL;
 	uint32_t len = 0;
@@ -43,59 +36,63 @@ bool EffectWrapper::load_inner(const char* filename, const char* entry_point, bo
 
   // Must use ps_4_0_level_9_3 or ps_4_0_level_9_1
   // Set shader version depending on feature level
-  std::string vs, ps;
+  string2 vs, ps, gs;
   switch(Graphics::instance().feature_level()) {
   case D3D_FEATURE_LEVEL_9_1:
     vs = "vs_4_0_level_9_1";
-    ps = "ps_4_0_level_9_1";
+		ps = "ps_4_0_level_9_1";
+		gs = "gs_4_0_level_9_1";
     break;
   case D3D_FEATURE_LEVEL_9_2:
   case D3D_FEATURE_LEVEL_9_3:
     vs = "vs_4_0_level_9_3";
     ps = "ps_4_0_level_9_3";
+		gs = "gs_4_0_level_9_3";
     break;
   default:
     vs = "vs_4_0";
     ps = "ps_4_0";
+		gs = "gs_4_0";
     break;
   }
 
-	if (vertex_shader) {
-
-		if (FAILED(D3DCompile(buf, len, filename, NULL, NULL, entry_point, vs.c_str(), D3D10_SHADER_ENABLE_STRICTNESS, 0, &_vs._blob, &error_blob))) {
+	ID3D11Device *device = Graphics::instance().device();
+	switch (type)
+	{
+	case VertexShader:
+		if (FAILED(D3DCompile(buf, len, filename, NULL, NULL, entry_point, vs, D3D10_SHADER_ENABLE_STRICTNESS, 0, &_vs._blob, &error_blob))) {
 			LOG_ERROR_LN("%s", error_blob->GetBufferPointer());
 			return false;
 		}
-		RETURN_ON_FAIL_BOOL(Graphics::instance().device()->CreateVertexShader(_vs._blob->GetBufferPointer(), _vs._blob->GetBufferSize(), NULL, &_vs._shader),
-			LOG_ERROR_LN);
+		RETURN_ON_FAIL_BOOL(device->CreateVertexShader(_vs._blob->GetBufferPointer(), _vs._blob->GetBufferSize(), NULL, &_vs._shader), LOG_ERROR_LN);
+		RETURN_ON_FAIL_BOOL(_vs.do_reflection(), LOG_ERROR_LN);
+		break;
 
-	} else {
-		if (FAILED(D3DCompile(buf, len, filename, NULL, NULL, entry_point, ps.c_str(), D3D10_SHADER_ENABLE_STRICTNESS, 0, &_ps._blob, &error_blob))) {
+	case GeometryShader:
+		if (FAILED(D3DCompile(buf, len, filename, NULL, NULL, entry_point, gs, D3D10_SHADER_ENABLE_STRICTNESS, 0, &_gs._blob, &error_blob))) {
 			LOG_ERROR_LN("%s", error_blob->GetBufferPointer());
 			return false;
 		}
-		RETURN_ON_FAIL_BOOL(Graphics::instance().device()->CreatePixelShader(_ps._blob->GetBufferPointer(), _ps._blob->GetBufferSize(), NULL, &_ps._shader),
-			LOG_ERROR_LN);
+		RETURN_ON_FAIL_BOOL(device->CreateGeometryShader(_gs._blob->GetBufferPointer(), _gs._blob->GetBufferSize(), NULL, &_gs._shader), LOG_ERROR_LN);
+		RETURN_ON_FAIL_BOOL(_gs.do_reflection(), LOG_ERROR_LN);
+		break;
+
+	case PixelShader:
+		if (FAILED(D3DCompile(buf, len, filename, NULL, NULL, entry_point, ps, D3D10_SHADER_ENABLE_STRICTNESS, 0, &_ps._blob, &error_blob))) {
+			LOG_ERROR_LN("%s", error_blob->GetBufferPointer());
+			return false;
+		}
+		RETURN_ON_FAIL_BOOL(device->CreatePixelShader(_ps._blob->GetBufferPointer(), _ps._blob->GetBufferSize(), NULL, &_ps._shader), LOG_ERROR_LN);
+		RETURN_ON_FAIL_BOOL(_ps.do_reflection(), LOG_ERROR_LN);
+		break;
 	}
-
-	RETURN_ON_FAIL_BOOL(do_reflection(), LOG_ERROR_LN);
 
   _filename = filename;
   return true;
 }
 
 
-bool EffectWrapper::do_reflection()
-{
-  if (_vs._shader && !_vs.do_reflection())
-    return false;
-  if (_ps._shader && !_ps.do_reflection())
-    return false;
-	return true;
-}
-
-
-bool EffectWrapper::set_resource(const std::string& /*name*/, ID3D11ShaderResourceView* /*resource*/)
+bool EffectWrapper::set_resource(const string2& /*name*/, ID3D11ShaderResourceView* /*resource*/)
 {
   return false;
 }

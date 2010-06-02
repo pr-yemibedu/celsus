@@ -68,12 +68,22 @@ string2::operator const char *()
 	return _data;
 }
 
+string2::operator const char *() const
+{
+	return _data;
+}
+
 void string2::assign(const char *data)
 {
-	_len = strlen(data);
-	_data = new char[_len+1];
-	memcpy(_data, data, _len);
-	_data[_len] = 0;
+	if (!data) {
+		_data = nullptr;
+		_len = 0;
+	} else {
+		_len = strlen(data);
+		_data = new char[_len+1];
+		memcpy(_data, data, _len);
+		_data[_len] = 0;
+	}
 }
 
 string2 string2::fmt(const char *format, ...)
@@ -114,10 +124,30 @@ bool string2::operator==(const char *str) const
 	return true;
 }
 
-// djb2 (bernstein hash)
-long long string2::hash() const
+bool string2::operator==(const std::string& str) const
 {
-	long long hash = 5381;
+	return operator==(str.c_str());
+}
+
+bool string2::operator!=(const string2& str) const
+{
+	return !operator==(str);
+}
+
+bool string2::operator!=(const char *str) const
+{
+	return !operator==(str);
+}
+
+bool string2::operator!=(const std::string& str) const
+{
+	return !operator==(str);
+}
+
+// djb2 (bernstein hash)
+size_t string2::hash() const
+{
+	size_t hash = 5381;
 	char c;
 	const char *str = _data;
 	while (c = *str++)
