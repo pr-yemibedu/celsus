@@ -147,7 +147,10 @@ ID3D11InputLayout* EffectWrapper::create_input_layout(const std::vector<D3D11_IN
 
 void EffectWrapper::set_shaders(ID3D11DeviceContext *context)
 {
-  context->VSSetShader(vertex_shader(), NULL, 0);
-  context->PSSetShader(pixel_shader(), NULL, 0);
-  context->GSSetShader(NULL, NULL, 0);
+  if (vertex_shader()) 
+    context->VSSetShader(vertex_shader(), NULL, 0);
+  if (geometry_shader())
+    context->GSSetShader(geometry_shader(), NULL, 0);
+  if (pixel_shader())
+    context->PSSetShader(pixel_shader(), NULL, 0);
 }

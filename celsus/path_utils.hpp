@@ -1,6 +1,7 @@
 #ifndef _PATH_UTILS_HPP_
 #define _PATH_UTILS_HPP_
 #include <string>
+#include "string_utils.hpp"
 
 class Path
 {
@@ -14,7 +15,7 @@ public:
   std::string get_filename_without_ext() const;
 
 	static std::string make_canonical(const std::string& str);
-	static std::string get_full_path_name(const std::string& p);
+	static std::string get_full_path_name(const string2& p);
   static std::string replace_extension(const std::string& path, const std::string& ext);
 
 private:

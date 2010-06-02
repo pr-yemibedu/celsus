@@ -17,27 +17,35 @@ public:
 	string2(const std::string& str);
 	string2(const string2& str);
 	string2& operator=(const string2& str);
-	operator const char *();
 	operator const char *() const;
 
 	// comparison
 	bool operator==(const string2& str) const;
 	bool operator==(const char *str) const;
-	bool operator==(const std::string& str) const;
 	bool operator!=(const string2& str) const;
 	bool operator!=(const char *str) const;
-	bool operator!=(const std::string& str) const;
+
+  friend string2 operator+(const string2& a, const string2& b);
+  friend string2 operator+=(string2& a, const string2& b);
+  friend string2 operator+=(string2& a, const char *b);
+
+  bool operator<(const string2& str) const { return hash() < str.hash(); }
 
 	int size() const { return _len; }
 	bool empty() const { return _len == 0; }
 	size_t hash() const;
-	operator size_t() const { return hash(); }
+	//operator size_t() const { return hash(); }
 
 	static string2 fmt(const char *format, ...);
 private:
 	void assign(const char *data);
+  void append(const char *str, const int len);
+  void append(const string2& str);
+  size_t calc_hash() const;
 	char *_data;
 	int _len;
+  mutable size_t _hash;
+  mutable bool _dirty;
 };
 
 template<>

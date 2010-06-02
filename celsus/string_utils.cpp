@@ -2,11 +2,6 @@
 #include "celsus.hpp"
 #include "string_utils.hpp"
 
-namespace
-{
-
-}
-
 bool ends_with(const char* str_to_test, const char* ending)
 {
 	if (str_to_test == NULL || ending == NULL) {
@@ -32,6 +27,7 @@ bool ends_with(const char* str_to_test, const char* ending)
 string2::string2()
 	: _data(nullptr)
 	, _len(0)
+  , _dirty(true)
 {
 }
 
@@ -63,11 +59,6 @@ string2& string2::operator=(const string2& str)
 	return *this;
 }
 
-string2::operator const char *()
-{
-	return _data;
-}
-
 string2::operator const char *() const
 {
 	return _data;
@@ -84,6 +75,22 @@ void string2::assign(const char *data)
 		memcpy(_data, data, _len);
 		_data[_len] = 0;
 	}
+  _dirty = true;
+}
+
+void string2::append(const char *str, const int len)
+{
+  char *new_ptr = new char[_len + len + 1];
+  memcpy(new_ptr, _data, _len);
+  memcpy(new_ptr + _len, str, len);
+  new_ptr[_len+len] = 0;
+  delete [] exch(_data, new_ptr);
+  _len += len;
+}
+
+void string2::append(const string2& str)
+{
+  append(str._data, str._len);
 }
 
 string2 string2::fmt(const char *format, ...)
@@ -124,11 +131,6 @@ bool string2::operator==(const char *str) const
 	return true;
 }
 
-bool string2::operator==(const std::string& str) const
-{
-	return operator==(str.c_str());
-}
-
 bool string2::operator!=(const string2& str) const
 {
 	return !operator==(str);
@@ -139,19 +141,44 @@ bool string2::operator!=(const char *str) const
 	return !operator==(str);
 }
 
-bool string2::operator!=(const std::string& str) const
+size_t string2::calc_hash() const
 {
-	return !operator==(str);
+  size_t hash = 5381;
+  char c;
+  const char *str = _data;
+  while (c = *str++)
+    hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
+  return hash;
 }
 
 // djb2 (bernstein hash)
 size_t string2::hash() const
 {
-	size_t hash = 5381;
-	char c;
-	const char *str = _data;
-	while (c = *str++)
-		hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
-
-	return hash;
+  if (_dirty) {
+    _hash = calc_hash();
+    _dirty = false;
+  }
+  return _hash;
 }
+
+string2 operator+(const string2& a, const string2& b)
+{
+  string2 res;
+  res.append(a);
+  res.append(b);
+  return res;
+
+}
+
+string2 operator+=(string2& a, const string2& b)
+{
+  a.append(b);
+  return a;
+}
+
+string2 operator+=(string2& a, const char *b)
+{
+  a.append(b);
+  return a;
+}
+

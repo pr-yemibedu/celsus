@@ -36,7 +36,7 @@ public:
 
 	ID3D11VertexShader* vertex_shader() { return _vs._shader; }
 	ID3D11PixelShader* pixel_shader() { return _ps._shader; }
-	ID3D11GeometryShader *geometry_shader() { _gs._shader; }
+	ID3D11GeometryShader *geometry_shader() { return _gs._shader; }
 
 private:
 
@@ -69,9 +69,9 @@ private:
   typedef string2 BufferName;
   typedef string2 VariableName;
   typedef std::map< BufferName, ConstantBuffer* > ConstantBuffers;
-  typedef stdext::hash_map< VariableName, BufferVariable* > BufferVariables;
-	typedef stdext::hash_map< string2, D3D11_SHADER_INPUT_BIND_DESC > BoundTextures;
-	typedef stdext::hash_map< string2, D3D11_SHADER_INPUT_BIND_DESC > BoundSamplers;
+  typedef std::map< VariableName, BufferVariable* > BufferVariables;
+	typedef std::map< string2, D3D11_SHADER_INPUT_BIND_DESC > BoundTextures;
+	typedef std::map< string2, D3D11_SHADER_INPUT_BIND_DESC > BoundSamplers;
 
 	enum ShaderType { VertexShader, GeometryShader, PixelShader};
 
