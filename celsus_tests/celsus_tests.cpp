@@ -114,7 +114,6 @@ TEST(string)
 	string2 s2;
 	s2 = "magnus";
 	CHECK_TRUE(s1 == s2);
-	CHECK_TRUE(s1.hash() == s2.hash());
 
 	CHECK_TRUE(string2("apa") != string2("bapa"));
 	CHECK_TRUE(string2("apa") == string2("apa"));

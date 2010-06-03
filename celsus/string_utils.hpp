@@ -29,13 +29,12 @@ public:
   string2& operator+=(const string2& str);
   string2& operator+=(const char *str);
 
-  bool operator<(const string2& str) const { return hash() < str.hash(); }
+  friend bool operator<(const string2& lhs, const string2& rhs);
+  friend bool operator<(const string2& lhs, const char *rhs);
+  friend bool operator<(const char *lhs, const string2& rhs);
 
 	int size() const { return _len; }
 	bool empty() const { return _len == 0; }
-	size_t hash() const;
-	//operator size_t() const { return hash(); }
-
 	static string2 fmt(const char *format, ...);
 private:
 	void assign(const char *data);
@@ -44,8 +43,6 @@ private:
   size_t calc_hash() const;
 	char *_data;
 	int _len;
-  mutable size_t _hash;
-  mutable bool _dirty;
 };
 
 template<>
@@ -53,7 +50,7 @@ struct std::less<string2>
 {
 	bool operator()(const string2& a, const string2& b) const
 	{
-		return a.hash() < b.hash();
+    return a < b;
 	}
 };
 

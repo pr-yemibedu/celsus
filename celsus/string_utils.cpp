@@ -27,7 +27,6 @@ bool ends_with(const char* str_to_test, const char* ending)
 string2::string2()
 	: _data(nullptr)
 	, _len(0)
-  , _dirty(true)
 {
 }
 
@@ -75,7 +74,6 @@ void string2::assign(const char *data)
 		memcpy(_data, data, _len);
 		_data[_len] = 0;
 	}
-  _dirty = true;
 }
 
 void string2::append(const char *str, const int len)
@@ -143,22 +141,13 @@ bool string2::operator!=(const char *str) const
 
 size_t string2::calc_hash() const
 {
+  // djb2 (bernstein hash)
   size_t hash = 5381;
   char c;
   const char *str = _data;
   while (c = *str++)
     hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
   return hash;
-}
-
-// djb2 (bernstein hash)
-size_t string2::hash() const
-{
-  if (_dirty) {
-    _hash = calc_hash();
-    _dirty = false;
-  }
-  return _hash;
 }
 
 string2 operator+(const string2& a, const string2& b)
@@ -182,3 +171,17 @@ string2& string2::operator+=(const char *str)
 	return *this;
 }
 
+bool operator<(const string2& lhs, const string2& rhs)
+{
+  return memcmp((const char *)lhs, (const char *)rhs, std::min<int>(lhs.size(), rhs.size())) < 0;
+}
+
+bool operator<(const string2& lhs, const char *rhs)
+{
+  return memcmp((const char *)lhs, rhs, std::min<int>(lhs.size(), strlen(rhs))) < 0;
+}
+
+bool operator<(const char *lhs, const string2& rhs)
+{
+  return memcmp(lhs, (const char *)rhs, std::min<int>(strlen(lhs), rhs.size())) < 0;
+}
