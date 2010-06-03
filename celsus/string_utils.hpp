@@ -26,8 +26,8 @@ public:
 	bool operator!=(const char *str) const;
 
   friend string2 operator+(const string2& a, const string2& b);
-  friend string2 operator+=(string2& a, const string2& b);
-  friend string2 operator+=(string2& a, const char *b);
+  string2& operator+=(const string2& str);
+  string2& operator+=(const char *str);
 
   bool operator<(const string2& str) const { return hash() < str.hash(); }
 

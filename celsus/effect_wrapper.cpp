@@ -112,6 +112,18 @@ void EffectWrapper::set_cbuffer()
 		}
 	} 
 
+	if (_gs._shader) {
+		for (auto i = _gs._constant_buffers.begin(), e = _gs._constant_buffers.end(); i != e; ++i) {
+			ConstantBuffer *b = i->second;
+			if (b->_mapped) {
+				b->_mapped = false;
+				context->Unmap(b->_buffer, 0);
+			}
+			ID3D11Buffer* buf[1] = { b->_buffer };
+			context->GSSetConstantBuffers(0, 1, buf);
+		}
+	} 
+
   if (_ps._shader) {
     for (auto i = _ps._constant_buffers.begin(), e = _ps._constant_buffers.end(); i != e; ++i) {
       ConstantBuffer *b = i->second;
@@ -147,10 +159,7 @@ ID3D11InputLayout* EffectWrapper::create_input_layout(const std::vector<D3D11_IN
 
 void EffectWrapper::set_shaders(ID3D11DeviceContext *context)
 {
-  if (vertex_shader()) 
-    context->VSSetShader(vertex_shader(), NULL, 0);
-  if (geometry_shader())
-    context->GSSetShader(geometry_shader(), NULL, 0);
-  if (pixel_shader())
-    context->PSSetShader(pixel_shader(), NULL, 0);
+	context->VSSetShader(vertex_shader(), NULL, 0);
+  context->GSSetShader(geometry_shader(), NULL, 0);
+  context->PSSetShader(pixel_shader(), NULL, 0);
 }

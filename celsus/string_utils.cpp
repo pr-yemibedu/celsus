@@ -170,15 +170,15 @@ string2 operator+(const string2& a, const string2& b)
 
 }
 
-string2 operator+=(string2& a, const string2& b)
+string2& string2::operator+=(const string2& str)
 {
-  a.append(b);
-  return a;
+	append(str);
+	return *this;
 }
 
-string2 operator+=(string2& a, const char *b)
+string2& string2::operator+=(const char *str)
 {
-  a.append(b);
-  return a;
+	append(str);
+	return *this;
 }
 

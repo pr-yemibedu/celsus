@@ -137,7 +137,7 @@ bool Graphics::init_directx(const HWND hwnd, const int width, const int height)
 	}
 
   create_back_buffers(width, height);
-
+#if 0
   // We need feature level dx 10 to be able to use direct2d (oh, the irony :)
   if (_feature_level >= D3D_FEATURE_LEVEL_10_0) {
     // Create the DX10 device
@@ -219,7 +219,7 @@ bool Graphics::init_directx(const HWND hwnd, const int width, const int height)
       &m_pTextFormat
       );
   }
-
+#endif
 
 	return true;
 }
