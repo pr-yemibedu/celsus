@@ -79,4 +79,7 @@ template<> struct ErrorPredicate<HRESULT>
 #define RETURN_ON_FAIL_VOID(x, log) { bool b = ErrorPredicate<decltype(x)>::test_bool(x); if (!b) { log(#x); return; } }
 #define RETURN_ON_FAIL_PTR(x, log) { bool b = ErrorPredicate<decltype(x)>::test_bool(x); if (!b) { log(#x); return NULL; } }
 
+#define RETURN_ON_FAIL_BOOL_E(x) { bool b = ErrorPredicate<decltype(x)>::test_bool(x); if (!b) { LOG_ERROR_LN(#x); return false; } }
+#define RETURN_ON_FAIL_BOOL_W(x) { bool b = ErrorPredicate<decltype(x)>::test_bool(x); if (!b) { LOG_WARNING_LN(#x); return false; } }
+
 #endif
