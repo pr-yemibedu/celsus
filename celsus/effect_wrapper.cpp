@@ -73,7 +73,7 @@ bool EffectWrapper::load_inner(const char* filename, const char* entry_point, Sh
 			LOG_ERROR_LN("\n%s", error_blob->GetBufferPointer());
 			return false;
 		}
-		RETURN_ON_FAIL_BOOL_E(device->CreateGeometryShader(_gs._blob->GetBufferPointer(), _gs._blob->GetBufferSize(), NULL, &_gs._shader), LOG_ERROR_LN);
+		RETURN_ON_FAIL_BOOL_E(device->CreateGeometryShader(_gs._blob->GetBufferPointer(), _gs._blob->GetBufferSize(), NULL, &_gs._shader));
 		RETURN_ON_FAIL_BOOL_E(_gs.do_reflection());
 		break;
 
