@@ -17,6 +17,7 @@ public:
   void	clear();
   void  set_clear_color(const D3DXCOLOR& c) { _clear_color = c; }
 	void	present();
+  void  tick();
 	void resize(const int width, const int height);
 
 	ID3D11Device* device() { return _device; }
@@ -29,6 +30,8 @@ public:
   D3D_FEATURE_LEVEL feature_level() const { return _feature_level; }
 
   CComPtr<IDXGISwapChain>& swap_chain() { return _swap_chain; }
+
+  float fps() const { return _fps; }
 
 private:
 	DISALLOW_COPY_AND_ASSIGN(Graphics);
@@ -61,6 +64,9 @@ private:
 	CComPtr<IDXGIKeyedMutex> _keyed_mutex_11;
 
   D3DXCOLOR _clear_color;
+  DWORD _start_fps_time;
+  int32_t _frame_count;
+  float _fps;
 };
 
 #endif

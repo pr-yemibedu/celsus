@@ -39,6 +39,9 @@ Graphics::Graphics()
 	: _width(-1)
 	, _height(-1)
   , _clear_color(0,0,0,1)
+  , _start_fps_time(0xffffffff)
+  , _frame_count(0)
+  , _fps(0)
 {
 }
 
@@ -251,6 +254,15 @@ void Graphics::clear(const D3DXCOLOR& c)
 
 void Graphics::present()
 {
+  const DWORD now = timeGetTime();
+  if (_start_fps_time == 0xffffffff) {
+    _start_fps_time = now;
+  } else if (++_frame_count == 50) {
+    _fps = 50.0f * 1000.0f / (timeGetTime() - _start_fps_time);
+    _start_fps_time = now;
+    _frame_count = 0;
+  }
+
 	_swap_chain->Present(0,0);
 }
 
@@ -259,4 +271,9 @@ void Graphics::resize(const int width, const int height)
   if (!_swap_chain || width == 0 || height == 0)
     return;
   create_back_buffers(width, height);
+}
+
+void Graphics::tick()
+{
+
 }
