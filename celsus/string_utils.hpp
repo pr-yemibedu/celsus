@@ -35,6 +35,7 @@ public:
 
 	int size() const { return _len; }
 	bool empty() const { return _len == 0; }
+	void clear();
 	static string2 fmt(const char *format, ...);
 private:
 	void assign(const char *data);

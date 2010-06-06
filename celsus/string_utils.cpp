@@ -91,6 +91,12 @@ void string2::append(const string2& str)
   append(str._data, str._len);
 }
 
+void string2::clear()
+{
+	SAFE_ADELETE(_data);
+	_len = 0;
+}
+
 string2 string2::fmt(const char *format, ...)
 {
 	string2 res;
