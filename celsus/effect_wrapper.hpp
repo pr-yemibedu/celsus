@@ -4,6 +4,7 @@
 #include "Logger.hpp"
 #include "error2.hpp"
 #include "string_utils.hpp"
+#include "DX11Utils.hpp"
 
 #include <hash_map>
 
@@ -202,6 +203,25 @@ private:
   Shader<ID3D11VertexShader> _vs;
   Shader<ID3D11PixelShader> _ps;
 	Shader<ID3D11GeometryShader> _gs;
+};
+
+struct InputDesc
+{
+  InputDesc& add(LPCSTR name, UINT index, DXGI_FORMAT fmt, UINT slot, UINT byte_offset = D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_CLASSIFICATION slot_class = D3D11_INPUT_PER_VERTEX_DATA, UINT step_rate = 0)
+  {
+    _desc.push_back(CD3D11_INPUT_ELEMENT_DESC(name, index, fmt, slot, byte_offset, slot_class, step_rate));
+    return *this;
+  }
+
+  bool create(CComPtr<ID3D11InputLayout>& layout, EffectWrapper *effect)
+  {
+    auto p = effect->create_input_layout(_desc);
+    if (!p) return false;
+    layout.Attach(p);
+    return true;
+  }
+
+  std::vector<D3D11_INPUT_ELEMENT_DESC> _desc;
 };
 
 #endif

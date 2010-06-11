@@ -143,6 +143,7 @@
     <ClInclude Include="celsus\Timer.hpp" />
     <ClInclude Include="celsus\tinyjson.hpp" />
     <ClInclude Include="celsus\UnicodeUtils.hpp" />
+    <ClInclude Include="celsus\vertex_types.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
