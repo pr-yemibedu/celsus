@@ -239,7 +239,13 @@ bool TextScanner::read_float(float *res)
 		return false;
 
 	_prev = _cur;
-	return (_cur = scan_parse_float(_cur, _buf_end, res)) != NULL;
+	const char *tmp = scan_parse_float(_cur, _buf_end, res);
+	if (!tmp)
+		return false;
+
+	// skip trailing whitespace
+	_cur = ::skip_chars(tmp, _buf_end, ", \t");
+	return true;
 }
 
 bool TextScanner::skip_line()
@@ -276,6 +282,14 @@ bool TextScanner::skip_to_next_line()
 		_cur++;
 	}
 	return skipped;
+}
+
+bool TextScanner::skip_chars_lenient(const char *tokens)
+{
+	if (eof())
+		return false;
+	skip_chars(tokens);
+	return true;
 }
 
 bool TextScanner::skip_chars(const char *tokens)
@@ -382,5 +396,8 @@ bool TextScanner::read_string(string2 *out)
 		++_cur;
 
 	out->assign(_prev, _cur - _prev);
+
+	// skip trailing whitespace
+	_cur = ::skip_chars(_cur, _buf_end, " \t");
   return true;
 }

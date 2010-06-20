@@ -37,16 +37,22 @@ string2::~string2()
 }
 
 string2::string2(const char *data)
+	: _data(nullptr)
+	, _len(0)
 {
 	assign(data);
 }
 
 string2::string2(const std::string& str)
+	: _data(nullptr)
+	, _len(0)
 {
 	assign(str.c_str());
 }
 
 string2::string2(const string2& str)
+	: _data(nullptr)
+	, _len(0)
 {
 	assign(str._data);
 }

@@ -28,6 +28,8 @@ public:
 
 	bool skip_line();
 	bool skip_chars(const char *tokens);
+	// returns false iff scanner is eof
+	bool skip_chars_lenient(const char *tokens);
 	bool skip_to_next_line();
 
 	bool eof() const;
