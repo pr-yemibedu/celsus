@@ -381,11 +381,6 @@ bool TextScanner::read_string(string2 *out)
 	while (!(is_newline(*_cur) || is_whitespace(*_cur) || eof()))
 		++_cur;
 
-	*out = str
-	out->assign()
-
-	while (true) {
-		char ch = *_cur;
-		wihle ()
-	}
+	out->assign(_prev, _cur - _prev);
+  return true;
 }
