@@ -66,15 +66,29 @@ string2::operator const char *() const
 void string2::assign(const char *data)
 {
 	if (!data) {
-		_data = nullptr;
+		delete exch_null(_data);
 		_len = 0;
 	} else {
 		_len = strlen(data);
-		_data = new char[_len+1];
+		delete [] exch(_data, new char[_len+1]);
 		memcpy(_data, data, _len);
 		_data[_len] = 0;
 	}
 }
+
+void string2::assign(const char *data, const int len)
+{
+	delete exch_null(_data);
+	if (!data || len == 0) {
+		_len = 0;
+	} else {
+		_data = new char[len+1];
+		memcpy(_data, data, len);
+		_data[len] = 0;
+		_len = len;
+	}
+}
+
 
 void string2::append(const char *str, const int len)
 {

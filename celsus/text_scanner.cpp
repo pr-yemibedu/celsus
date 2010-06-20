@@ -300,8 +300,9 @@ bool TextScanner::skip_chars(const char *tokens)
 	return found_any;
 }
 
-bool TextScanner::read_floats(std::vector<float>* out)
+bool TextScanner::read_floats(std::vector<float> *out)
 {
+	out->clear();
 	if (eof())
 		return false;
 
@@ -311,15 +312,34 @@ bool TextScanner::read_floats(std::vector<float>* out)
 	return !out->empty();
 }
 
-bool TextScanner::read_ints(std::vector<int>* out)
+bool TextScanner::read_ints(std::vector<int> *out)
+{
+	out->clear();
+	if (eof())
+		return false;
+
+	_prev = _cur;
+
+	if (const char *tmp = ::parse_ints(_cur, _buf_end, out))
+		_cur = tmp;
+
+	return !out->empty();
+}
+
+bool TextScanner::read_int(int *out)
 {
 	if (eof())
 		return false;
 
 	_prev = _cur;
 
-	_cur = ::parse_ints(_cur, _buf_end, out);
-	return !out->empty();
+	const char *tmp = scan_parse_int(_cur, _buf_end, out);
+	if (!tmp)
+		return false;
+
+	// skip trailing whitespace
+	_cur = ::skip_chars(tmp, _buf_end, ", \t");
+	return true;
 }
 
 void TextScanner::rewind()
@@ -332,10 +352,40 @@ bool TextScanner::eof() const
 	return !_cur || _cur > _buf_end;
 }
 
+bool TextScanner::peek(char *res, const int count)
+{
+	// 012
+	// xx0  
+	// ^ ^
+	// | +-- buf_end
+	// +---- cur
+	if (_buf_end - _cur < count)
+		return false;
+	memcpy(res, _cur, count);
+	return true;
+}
+
 bool TextScanner::peek(char *res)
 {
 	if (eof())
 		return false;
 	*res = *_cur;
 	return true;
+}
+
+bool TextScanner::read_string(string2 *out)
+{
+	if (eof())
+		return false;
+	_prev = _cur;
+	while (!(is_newline(*_cur) || is_whitespace(*_cur) || eof()))
+		++_cur;
+
+	*out = str
+	out->assign()
+
+	while (true) {
+		char ch = *_cur;
+		wihle ()
+	}
 }

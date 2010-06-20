@@ -38,7 +38,7 @@ struct ScopedCs
 template<typename T>
 T exch_null(T& t)
 {
-  T tmp = t; t = NULL; return tmp;
+  T tmp = t; t = nullptr; return tmp;
 }
 
 template<typename T>

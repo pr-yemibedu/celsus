@@ -37,8 +37,11 @@ public:
 	bool empty() const { return _len == 0; }
 	void clear();
 	static string2 fmt(const char *format, ...);
-private:
+
 	void assign(const char *data);
+	void assign(const char *data, const int len);
+
+private:
   void append(const char *str, const int len);
   void append(const string2& str);
   size_t calc_hash() const;

@@ -1,4 +1,5 @@
 #pragma once
+#include "string_utils.hpp"
 
 const char *scan_read_line(const char *buf, const char *buf_end, int *len);
 const char *scan_skip_char(const char *buf, const char *buf_end, char ch);
@@ -17,10 +18,13 @@ public:
 	bool load(const char *filename);
 
 	bool peek(char *res);
+	bool peek(char *res, const int count);
 	bool read_float(float *res);
 	bool read_floats(std::vector<float>* out);
+	bool read_int(int *out);
 	bool read_ints(std::vector<int>* out);
 	bool read_line(const char **res, int *len);
+	bool read_string(string2 *out);
 
 	bool skip_line();
 	bool skip_chars(const char *tokens);
