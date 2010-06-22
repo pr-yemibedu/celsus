@@ -23,6 +23,8 @@ bool ends_with(const char* str_to_test, const char* ending)
 	return true;
 }
 
+string2 string2::empty_string;
+
 
 string2::string2()
 	: _data(nullptr)
@@ -55,6 +57,13 @@ string2::string2(const string2& str)
 	, _len(0)
 {
 	assign(str._data);
+}
+
+string2::string2(const char *data, int len)
+	: _data(nullptr)
+	, _len(0)
+{
+	assign(data, len);
 }
 
 string2& string2::operator=(const string2& str)
@@ -196,6 +205,22 @@ string2& string2::operator+=(const char *str)
 	append(str);
 	return *this;
 }
+
+string2& string2::operator+=(const char ch)
+{
+	char buf[2] = { ch, 0 };
+	append(buf);
+	return *this;
+}
+
+string2 string2::substr(const int start, const int len) const
+{
+	if (_data == NULL || start + len >= _len)
+		return string2();
+
+	return string2(&_data[start], len);
+}
+
 
 bool operator<(const string2& lhs, const string2& rhs)
 {

@@ -14,6 +14,7 @@ public:
 
 	// assignment
 	string2(const char *data);
+	string2(const char *data, int len);
 	string2(const std::string& str);
 	string2(const string2& str);
 	string2& operator=(const string2& str);
@@ -27,11 +28,13 @@ public:
 
   friend string2 operator+(const string2& a, const string2& b);
   string2& operator+=(const string2& str);
-  string2& operator+=(const char *str);
+	string2& operator+=(const char *str);
+	string2& operator+=(const char ch);
 
   friend bool operator<(const string2& lhs, const string2& rhs);
   friend bool operator<(const string2& lhs, const char *rhs);
   friend bool operator<(const char *lhs, const string2& rhs);
+
 
 	int size() const { return _len; }
 	bool empty() const { return _len == 0; }
@@ -40,6 +43,10 @@ public:
 
 	void assign(const char *data);
 	void assign(const char *data, const int len);
+
+	string2 substr(const int start, const int len) const;
+
+	static string2 empty_string;
 
 private:
   void append(const char *str, const int len);

@@ -101,6 +101,33 @@ TEST(replace_ext)
 	CHECK_TRUE("" == Path::replace_extension("", "log"));
 }
 
+TEST(path_utils)
+{
+	string2 filename = "filename";
+	string2 ext = "ext";
+
+	string2 path_name1("c:/test1/test2/filename.ext");
+	string2 path_name2("c:/test1/test2/filename.");
+	string2 path_name3("c:/test1/test2/");
+
+	Path p1(path_name1);
+	Path p2(path_name2);
+	Path p3(path_name3);
+
+	CHECK_TRUE(ext == p1.get_ext());
+	CHECK_TRUE(filename == p1.get_filename_without_ext());
+	CHECK_TRUE(filename + "." + ext == p1.get_filename());
+
+	CHECK_TRUE(string2::empty_string == p2.get_ext());
+	CHECK_TRUE(filename + "." == p3.get_filename());
+	CHECK_TRUE(filename == p3.get_filename_without_ext());
+
+	CHECK_TRUE(string2::empty_string == p3.get_filename());
+	CHECK_TRUE(string2::empty_string == p3.get_ext());
+	CHECK_TRUE(string2::empty_string == p3.get_filename_without_ext());
+
+}
+
 TEST(string)
 {
 	string2 s0;

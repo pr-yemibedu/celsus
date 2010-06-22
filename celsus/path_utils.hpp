@@ -1,27 +1,26 @@
 #ifndef _PATH_UTILS_HPP_
 #define _PATH_UTILS_HPP_
-#include <string>
 #include "string_utils.hpp"
 
 class Path
 {
 public:
-  Path(const std::string& str);
-  Path replace_extension(const std::string& ext);
-  const std::string& str() const;
-  std::string get_path() const;
-  std::string get_ext() const;
-  std::string get_filename() const;
-  std::string get_filename_without_ext() const;
+  Path(const string2& str);
+  Path replace_extension(const string2& ext);
+  const string2& str() const;
+  string2 get_path() const;
+  string2 get_ext() const;
+  string2 get_filename() const;
+  string2 get_filename_without_ext() const;
 
-	static std::string make_canonical(const std::string& str);
-	static std::string get_full_path_name(const string2& p);
-  static std::string replace_extension(const std::string& path, const std::string& ext);
+	static string2 make_canonical(const string2& str);
+	static string2 get_full_path_name(const string2& p);
+  static string2 replace_extension(const string2& path, const string2& ext);
 
 private:
-  std::string _str;
-  int _file_ofs;
-  int _ext_ofs;
+  string2 _str;
+  int _file_ofs;		// points to the last '/'
+  int _ext_ofs;			// points to the '.'
 };
 
 #endif

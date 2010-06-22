@@ -55,7 +55,7 @@ void LogMgr::debug_output( const bool new_line, const bool one_shot, const char 
       char buf[MAX_PATH+1];
       buf[MAX_PATH] = 0;
       GetModuleFileNameA(NULL, buf, MAX_PATH);
-      open_output_file(Path::replace_extension(buf, "log").c_str());
+      open_output_file(Path::replace_extension(buf, "log"));
     }
   }
 
