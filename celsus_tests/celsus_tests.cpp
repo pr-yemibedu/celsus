@@ -119,8 +119,8 @@ TEST(path_utils)
 	CHECK_TRUE(filename + "." + ext == p1.get_filename());
 
 	CHECK_TRUE(string2::empty_string == p2.get_ext());
-	CHECK_TRUE(filename + "." == p3.get_filename());
-	CHECK_TRUE(filename == p3.get_filename_without_ext());
+	CHECK_TRUE(filename + "." == p2.get_filename());
+	CHECK_TRUE(filename == p2.get_filename_without_ext());
 
 	CHECK_TRUE(string2::empty_string == p3.get_filename());
 	CHECK_TRUE(string2::empty_string == p3.get_ext());
