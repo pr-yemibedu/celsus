@@ -28,10 +28,16 @@ HRESULT create_static_vertex_buffer(ID3D11Device* device, const std::vector<T>& 
   return create_static_vertex_buffer(device, v.size(), sizeof(T), (const uint8_t*)&v[0], vertex_buffer);
 }
 
+template<class T>
+HRESULT create_static_index_buffer(ID3D11Device* device, const std::vector<T>& v, ID3D11Buffer** index_buffer)
+{
+	return create_static_index_buffer(device, v.size(), sizeof(T), (const uint8_t*)&v[0], vertex_buffer);
+}
+
 void set_vb(ID3D11DeviceContext *context, ID3D11Buffer *buf, const uint32_t stride);
 
-HRESULT create_static_vertex_buffer(ID3D11Device* device, const uint32_t vertex_count, const uint32_t vertex_size, const uint8_t* data, ID3D11Buffer** vertex_buffer);
-HRESULT create_static_index_buffer(ID3D11Device* device, const uint32_t index_count, const uint32_t index_size, const uint8_t* data, ID3D11Buffer** index_buffer);
+HRESULT create_static_vertex_buffer(ID3D11Device* device, const uint32_t vertex_count, const uint32_t vertex_size, const void* data, ID3D11Buffer** vertex_buffer);
+HRESULT create_static_index_buffer(ID3D11Device* device, const uint32_t index_count, const uint32_t index_size, const void* data, ID3D11Buffer** index_buffer);
 
 HRESULT create_dynamic_vertex_buffer(ID3D11Device *device, const uint32_t vertex_count, const uint32_t vertex_size, ID3D11Buffer** vertex_buffer);
 

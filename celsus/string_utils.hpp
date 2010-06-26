@@ -38,6 +38,7 @@ public:
   friend bool operator<(const char *lhs, const string2& rhs);
 
 
+	const char *c_str() const { return _data; }
 	int size() const { return _len; }
 	bool empty() const { return _len == 0; }
 	void clear();

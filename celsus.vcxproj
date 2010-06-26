@@ -133,6 +133,7 @@
     <ClInclude Include="celsus\MemoryMappedFile.hpp" />
     <ClInclude Include="celsus\path_utils.hpp" />
     <ClInclude Include="celsus\Profiler.hpp" />
+    <ClInclude Include="celsus\refptr.hpp" />
     <ClInclude Include="celsus\section_reader.hpp" />
     <ClInclude Include="celsus\stdafx.h" />
     <ClInclude Include="celsus\string_utils.hpp" />

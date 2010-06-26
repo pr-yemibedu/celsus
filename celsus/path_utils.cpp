@@ -51,7 +51,10 @@ const string2& Path::str() const
 
 string2 Path::get_path() const
 {
-  return "";
+	string2 res;
+	if (_file_ofs != -1)
+		res = _str.substr(0, _file_ofs + 1);
+	return res;
 }
 
 string2 Path::get_ext() const

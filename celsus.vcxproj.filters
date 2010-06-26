@@ -161,5 +161,8 @@
     <ClInclude Include="celsus\vertex_types.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="celsus\refptr.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

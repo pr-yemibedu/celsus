@@ -3,6 +3,7 @@
 #include <io.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include "celsus.hpp"
 
 namespace
 {
@@ -95,11 +96,48 @@ bool file_exists(const char *filename)
   return !!(status.st_mode & _S_IFREG);
 }
 
+FileWriter::FileWriter()
+	: _file(INVALID_HANDLE_VALUE)
+{
+}
+
+FileWriter::~FileWriter()
+{
+	if (_file != INVALID_HANDLE_VALUE)
+		CloseHandle(_file);
+}
+
+bool FileWriter::open(const char *filename)
+{
+	_file = CreateFile(filename, GENERIC_WRITE, 0, 0, CREATE_ALWAYS, 0, NULL);
+	return _file != INVALID_HANDLE_VALUE;
+}
+
+bool FileWriter::write_string(const string2& str)
+{
+	return write(str.size()) && write_raw(str.c_str(), str.size());
+}
+
+bool FileWriter::write_raw(const void *buf, const DWORD len)
+{
+	if (_file == INVALID_HANDLE_VALUE)
+		return false;
+	DWORD written = 0;
+	return WriteFile(_file, buf, len, &written, NULL) && written == len;
+}
+
 FileReader::FileReader()
 	: _data(nullptr)
 	, _len(0)
+	, _ref_count(1)
 {
 }
+
+FileReader::~FileReader()
+{
+	SAFE_ADELETE(_data);
+}
+
 
 bool FileReader::load(const char *filename)
 {
@@ -109,12 +147,53 @@ bool FileReader::load(const char *filename)
 	return _data != NULL;
 }
 
+void FileReader::add_ref() const
+{
+	InterlockedIncrement(&_ref_count);
+}
+
+void FileReader::release() const
+{
+	if (InterlockedDecrement(&_ref_count) == 0)
+		delete this;
+};
+
 
 DataReader::DataReader(uint8_t *data, int32_t len) 
 	: _data(data)
 	, _len(len)
 	, _ofs(0) 
+	, _file(nullptr)
 {
+}
+
+DataReader::DataReader(FileReader *file)
+	: _file(file)
+	, _data(file->data())
+	, _len(file->len())
+	, _ofs(0)
+{
+	_file->add_ref();
+}
+
+DataReader::~DataReader()
+{
+	if (_file)
+		_file->release();
+}
+
+bool DataReader::read_string(string2 *out)
+{
+	int len;
+	if (!read(&len))
+		return false;
+
+	if (_ofs + len > _len)
+		return false;
+	
+	out->assign((const char *)_data + _ofs, len);
+	_ofs += len;
+	return true;
 }
 
 
