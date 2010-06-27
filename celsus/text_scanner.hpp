@@ -24,6 +24,7 @@ public:
 	bool read_int(int *out);
 	bool read_ints(std::vector<int>* out);
 	bool read_line(const char **res, int *len);
+	bool read_line(string2 *out);
 	bool read_string(string2 *out);
 
 	bool skip_line();

@@ -253,6 +253,8 @@ bool TextScanner::skip_line()
 	return true;
 }
 
+bool read_line(string2 *out);
+
 bool TextScanner::read_line(const char **res, int *len)
 {
 	if (!_cur || _cur > _buf_end)

@@ -9,7 +9,7 @@ namespace
 {
   uint8_t* load_file_inner(const char* filename, const bool zero_terminate, uint32_t* len)
   {
-    const HANDLE file_handle = CreateFileA(filename, GENERIC_READ, FILE_SHARE_READ, NULL, 
+    const HANDLE file_handle = CreateFileA(filename, GENERIC_READ, FILE_SHARE_WRITE | FILE_SHARE_READ, NULL, 
       OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
     if (file_handle == INVALID_HANDLE_VALUE) {
       return NULL;
