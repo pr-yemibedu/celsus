@@ -221,6 +221,15 @@ string2 string2::substr(const int start, const int len) const
 	return string2(&_data[start], len);
 }
 
+bool string2::starts_with(const char *str) const
+{
+  for (int i = 0, e = strlen(str); i < e; ++i) {
+    if (_data[i] != str[i])
+      return false;
+  }
+  return true;
+}
+
 
 bool operator<(const string2& lhs, const string2& rhs)
 {

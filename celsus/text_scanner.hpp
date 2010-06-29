@@ -17,10 +17,13 @@ public:
 	TextScanner();
 	bool load(const char *filename);
 
+  TextScanner& set_line_mode(const bool line_mode);
+
 	bool peek(char *res);
 	bool peek(char *res, const int count);
 	bool read_float(float *res);
 	bool read_floats(std::vector<float>* out);
+  bool read_hex(uint32_t *out);
 	bool read_int(int *out);
 	bool read_ints(std::vector<int>* out);
 	bool read_line(const char **res, int *len);
@@ -33,6 +36,9 @@ public:
 	bool skip_chars_lenient(const char *tokens);
 	bool skip_to_next_line();
 
+  // skip empty lines, and lines starting with a #-sign
+  bool skip_dummy_lines();
+
 	bool eof() const;
 
 	void rewind();
@@ -43,4 +49,5 @@ private:
 	const char *_cur;
 	const char *_prev;
 	uint32_t _len;
+  bool _line_mode;    // each call to the read functions is preceeded by a call to skip_dummy_lines
 };

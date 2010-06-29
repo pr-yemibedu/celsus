@@ -47,7 +47,9 @@ public:
 	void assign(const char *data);
 	void assign(const char *data, const int len);
 
+  // utility methods
 	string2 substr(const int start, const int len) const;
+  bool starts_with(const char *str) const;
 
 	static string2 empty_string;
 

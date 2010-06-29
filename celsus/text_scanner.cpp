@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "text_scanner.hpp"
 #include "file_utils.hpp"
+#include "celsus.hpp"
 
 bool is_whitespace(char ch)
 {
@@ -15,6 +16,18 @@ bool is_newline(char ch)
 bool is_digit(const char ch)
 {
   return ch >= '0' && ch <= '9';
+}
+
+bool is_hex_digit(char ch)
+{
+  return is_digit(ch) || tolower(ch) >= 'a' && tolower(ch) <= 'f';
+}
+
+int hex_to_value(char ch)
+{
+  if (ch <= '9')
+    return ch - '0';
+  return 10 + tolower(ch) - 'a';
 }
 
 // find the next parsable char
@@ -215,6 +228,7 @@ TextScanner::TextScanner()
 	, _cur(NULL)
 	, _prev(NULL)
 	, _len(0)
+  , _line_mode(false)
 {
 
 }
@@ -235,6 +249,11 @@ void TextScanner::reset()
 
 bool TextScanner::read_float(float *res)
 {
+  if (_line_mode) {
+    if (!skip_dummy_lines())
+      return false;
+  }
+
 	if (!_buf)
 		return false;
 
@@ -253,10 +272,28 @@ bool TextScanner::skip_line()
 	return true;
 }
 
-bool read_line(string2 *out);
+bool TextScanner::read_line(string2 *out)
+{
+  if (_line_mode) {
+    if (!skip_dummy_lines())
+      return false;
+  }
+
+  const char *str;
+  int len;
+  if (!read_line(&str, &len))
+    return false;
+  out->assign(str, len);
+  return true;
+}
 
 bool TextScanner::read_line(const char **res, int *len)
 {
+  if (_line_mode) {
+    if (!skip_dummy_lines())
+      return false;
+  }
+
 	if (!_cur || _cur > _buf_end)
 		return false;
 
@@ -318,6 +355,11 @@ bool TextScanner::skip_chars(const char *tokens)
 
 bool TextScanner::read_floats(std::vector<float> *out)
 {
+  if (_line_mode) {
+    if (!skip_dummy_lines())
+      return false;
+  }
+
 	out->clear();
 	if (eof())
 		return false;
@@ -330,6 +372,11 @@ bool TextScanner::read_floats(std::vector<float> *out)
 
 bool TextScanner::read_ints(std::vector<int> *out)
 {
+  if (_line_mode) {
+    if (!skip_dummy_lines())
+      return false;
+  }
+
 	out->clear();
 	if (eof())
 		return false;
@@ -344,6 +391,11 @@ bool TextScanner::read_ints(std::vector<int> *out)
 
 bool TextScanner::read_int(int *out)
 {
+  if (_line_mode) {
+    if (!skip_dummy_lines())
+      return false;
+  }
+
 	if (eof())
 		return false;
 
@@ -391,6 +443,11 @@ bool TextScanner::peek(char *res)
 
 bool TextScanner::read_string(string2 *out)
 {
+  if (_line_mode) {
+    if (!skip_dummy_lines())
+      return false;
+  }
+
 	if (eof())
 		return false;
 	_prev = _cur;
@@ -402,4 +459,52 @@ bool TextScanner::read_string(string2 *out)
 	// skip trailing whitespace
 	_cur = ::skip_chars(_cur, _buf_end, " \t");
   return true;
+}
+
+bool TextScanner::read_hex(uint32_t *out)
+{
+  if (_line_mode) {
+    if (!skip_dummy_lines())
+      return false;
+  }
+
+  // require the input to have a 0x prefix
+  char buf[2];
+  if (!peek(buf, 2))
+    return false;
+  if (buf[0] != '0' || tolower(buf[1]) != 'x')
+    return false;
+  _cur += 2;
+  *out = 0;
+  while (true) {
+    if (eof() || !is_hex_digit(*_cur))
+      break;
+    *out <<= 4;
+    *out += hex_to_value(*_cur);
+    _cur++;
+  }
+  return true;
+}
+
+
+bool TextScanner::skip_dummy_lines()
+{
+  bool org = _line_mode;
+  ScopedObj o( [=]() { _line_mode = org; });
+  _line_mode = false;
+  string2 str;
+  while (true) {
+    if (!read_line(&str)) 
+      return false;
+    if (!(str.empty() || str.starts_with("#")))
+      break;
+  }
+  rewind();
+  return true;
+}
+
+TextScanner& TextScanner::set_line_mode(const bool line_mode)
+{
+  _line_mode = line_mode;
+  return *this;
 }
