@@ -2,6 +2,7 @@
 #define _DX11_UTILS_HPP_
 
 #include <d3d11.h>
+#include <D3DX10math.h>
 #include <stdint.h>
 #include <vector>
 
@@ -41,5 +42,8 @@ HRESULT create_static_index_buffer(ID3D11Device* device, const uint32_t index_co
 
 HRESULT create_dynamic_vertex_buffer(ID3D11Device *device, const uint32_t vertex_count, const uint32_t vertex_size, ID3D11Buffer** vertex_buffer);
 
+// maps from screen space (0,0) top left, (width-1, height-1) bottom right
+// to clip space (-1,+1) top left, (+1, -1) bottom right
+D3DXVECTOR3 screen_to_clip(const D3DXVECTOR3& screen, const D3D11_VIEWPORT& v);
 
 #endif

@@ -39,3 +39,7 @@ void set_vb(ID3D11DeviceContext *context, ID3D11Buffer *buf, const uint32_t stri
   context->IASetVertexBuffers(0, 1, bufs, strides, ofs);
 }
 
+D3DXVECTOR3 screen_to_clip(const D3DXVECTOR3& screen, const D3D11_VIEWPORT& v)
+{
+	return D3DXVECTOR3((screen.x - v.Width / 2) / (v.Width / 2), (v.Height / 2 - screen.y) / (v.Height / 2), 0);
+}
