@@ -27,10 +27,12 @@ bool EffectWrapper::load_shaders(const char *filename, const char *vs, const cha
 
 bool EffectWrapper::load_inner(const char* filename, const char* entry_point, ShaderType type)
 {
-	uint8_t* buf = NULL;
 	uint32_t len = 0;
-	if ((buf = load_file(filename, &len)) == NULL)
+  uint8_t* buf = load_file(filename, &len);
+  if (buf == NULL || len == 0) {
+    LOG_WARNING_LN("error loading file");
     return false;
+  }
 
 	ID3DBlob* error_blob = NULL;
 

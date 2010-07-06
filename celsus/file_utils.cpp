@@ -15,17 +15,20 @@ namespace
       return NULL;
     }
 
-    const uint32_t file_size = GetFileSize(file_handle, NULL);
-    *len = file_size + (zero_terminate ? 1 : 0);
+    LARGE_INTEGER file_size;
+    if (!GetFileSizeEx(file_handle, &file_size))
+      return NULL;
+
+    *len = file_size.LowPart + (zero_terminate ? 1 : 0);
     uint8_t* buf = new BYTE[*len];
     DWORD bytes_read = 0;
-    if (!ReadFile(file_handle, buf, file_size, &bytes_read, NULL) || bytes_read != file_size) {
+    if (!ReadFile(file_handle, buf, file_size.LowPart, &bytes_read, NULL) || bytes_read != file_size.LowPart) {
       return NULL;
     }
 
     CloseHandle(file_handle);
     if (zero_terminate) {
-      buf[file_size] = 0;
+      buf[file_size.LowPart] = 0;
     }
     return buf;
   }
