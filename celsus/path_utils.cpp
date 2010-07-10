@@ -111,3 +111,8 @@ string2 Path::replace_extension(const string2& path, const string2& ext)
   return res;
 }
 
+string2 Path::get_path(const string2& p)
+{
+	Path a(p);
+	return a.get_path();
+}

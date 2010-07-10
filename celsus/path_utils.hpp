@@ -16,6 +16,7 @@ public:
 	static string2 make_canonical(const string2& str);
 	static string2 get_full_path_name(const string2& p);
   static string2 replace_extension(const string2& path, const string2& ext);
+	static string2 get_path(const string2& p);
 
 private:
   string2 _str;

@@ -23,3 +23,17 @@ std::string to_string(char const * const format, ... )
 
   return std::string(buf);
 }
+
+
+string2 get_env_variable(const char *var)
+{
+	string2 res;
+	char *env = NULL;
+	DWORD len = GetEnvironmentVariable("LUA_PATH", NULL, 0);
+	env = new char[len + 1];
+	GetEnvironmentVariable(var, env, len);
+	res.assign(env, len);
+	SAFE_ADELETE(env);
+	return res;
+}
+

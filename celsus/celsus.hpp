@@ -3,6 +3,7 @@
 
 #include <functional>
 #include <windows.h>
+#include "string_utils.hpp"
 
 #define SAFE_RELEASE(x) if( (x) != 0 ) { (x)->Release(); (x) = 0; }
 #define SAFE_FREE(x) if( (x) != 0 ) { free((void*)(x)); (x) = 0; }
@@ -72,5 +73,7 @@ void map_delete(T& container)
 #define DISALLOW_COPY_AND_ASSIGN(TypeName) \
 	TypeName(const TypeName&);               \
 	void operator=(const TypeName&)
+
+string2 get_env_variable(const char *var);
 
 #endif // #ifndef CELSUS_HPP
