@@ -7,6 +7,7 @@ struct PosNormal
 {
 	PosNormal() {}
 	PosNormal(const D3DXVECTOR3& pos, const D3DXVECTOR3& normal) : pos(pos), normal(normal) {}
+  PosNormal(float x, float y, float z, float nx, float ny, float nz) : pos(x, y, z), normal(nx, ny, nz) {}
 	D3DXVECTOR3 pos;
 	D3DXVECTOR3 normal;
 };
@@ -15,6 +16,7 @@ struct PosTex
 {
   PosTex() {}
   PosTex(const D3DXVECTOR3& pos, const D3DXVECTOR2& tex) : pos(pos), tex(tex) {}
+  PosTex(float x, float y, float z, float u, float v) : pos(x, y, z), tex(u, v) {}
   D3DXVECTOR3 pos;
   D3DXVECTOR2 tex;
 };
