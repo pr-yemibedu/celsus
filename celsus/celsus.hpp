@@ -48,6 +48,12 @@ T exch(T& a, T& b)
   T tmp = a; a = b; b = tmp; return tmp;
 }
 
+template<typename T>
+T exch_const(T& a, const T& b)
+{
+  T tmp = a; a = b; return tmp;
+}
+
 template<class T>
 void container_delete(T& container)
 {

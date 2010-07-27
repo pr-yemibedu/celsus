@@ -1,6 +1,7 @@
 #pragma once
 #include <functional>
 #include <set>
+#include <map>
 #include "string_utils.hpp"
 
 class FileWatcher
