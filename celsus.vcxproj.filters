@@ -72,6 +72,9 @@
     <ClCompile Include="celsus\file_utils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="celsus\file_watcher.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="celsus\celsus.hpp">
@@ -162,6 +165,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="celsus\refptr.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="celsus\file_watcher.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="celsus\fast_delegate.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="celsus\fast_delegate_bind.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

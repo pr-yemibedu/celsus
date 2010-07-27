@@ -63,7 +63,7 @@
       <EnablePREfast>false</EnablePREfast>
     </ClCompile>
     <Lib>
-      <OutputFile>$(ProjectDir)$(Configuration)/$(TargetName)$(TargetExt)</OutputFile>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -82,7 +82,7 @@
       <DisableSpecificWarnings>4512;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Lib>
-      <OutputFile>$(ProjectDir)$(Configuration)/$(TargetName)$(TargetExt)</OutputFile>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -92,6 +92,7 @@
     <ClCompile Include="celsus\DX11Utils.cpp" />
     <ClCompile Include="celsus\effect_wrapper.cpp" />
     <ClCompile Include="celsus\file_utils.cpp" />
+    <ClCompile Include="celsus\file_watcher.cpp" />
     <ClCompile Include="celsus\graphics.cpp" />
     <ClCompile Include="celsus\Logger.cpp" />
     <ClCompile Include="celsus\MemoryMappedFile.cpp" />
@@ -126,7 +127,10 @@
     <ClInclude Include="celsus\effect_wrapper.hpp" />
     <ClInclude Include="celsus\error2.hpp" />
     <ClInclude Include="celsus\ErrorHandling.hpp" />
+    <ClInclude Include="celsus\fast_delegate.hpp" />
+    <ClInclude Include="celsus\fast_delegate_bind.hpp" />
     <ClInclude Include="celsus\file_utils.hpp" />
+    <ClInclude Include="celsus\file_watcher.hpp" />
     <ClInclude Include="celsus\graphics.hpp" />
     <ClInclude Include="celsus\Logger.hpp" />
     <ClInclude Include="celsus\math_utils.hpp" />

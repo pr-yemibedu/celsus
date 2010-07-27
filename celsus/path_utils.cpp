@@ -20,8 +20,9 @@ string2 Path::make_canonical(const string2& str)
 
 
 Path::Path(const string2& str) 
-: _str(make_canonical(str)) 
-, _ext_ofs(-1)
+  : _str(make_canonical(str)) 
+  , _ext_ofs(-1)
+  , _file_ofs(-1)
 {
   for (int i = _str.size() - 1; i >= 0; --i) {
 		char ch = _str[i];
