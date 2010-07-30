@@ -54,6 +54,14 @@ T exch_const(T& a, const T& b)
   T tmp = a; a = b; return tmp;
 }
 
+template< class Container >
+void safe_erase(Container& c, const typename Container::value_type& v)
+{
+	auto it = std::find(c.begin(), c.end(), v);
+	if (it != c.end())
+		c.erase(it);
+}
+
 template<class T>
 void container_delete(T& container)
 {
