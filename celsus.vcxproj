@@ -95,6 +95,7 @@
     <ClCompile Include="celsus\file_watcher.cpp" />
     <ClCompile Include="celsus\graphics.cpp" />
     <ClCompile Include="celsus\Logger.cpp" />
+    <ClCompile Include="celsus\math_utils.cpp" />
     <ClCompile Include="celsus\MemoryMappedFile.cpp" />
     <ClCompile Include="celsus\path_utils.cpp" />
     <ClCompile Include="celsus\Profiler.cpp" />

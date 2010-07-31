@@ -1,6 +1,8 @@
 #pragma once
 #include <D3DX10math.h>
 
+static const double kPi = 3.14159265358979323846;
+
 static const D3DXMATRIX kMtxId(1,0,0,0,
 	0,1,0,0,
 	0,0,1,0,
@@ -73,3 +75,8 @@ inline D3DXVECTOR3 get_scale(const D3DXMATRIX& transform)
 {
 	return D3DXVECTOR3(transform._11, transform._22, transform._33);
 }
+
+
+// phi is angle about x-axis. 0 = 1,0,0
+// theta is angle about y-axis. 0 = 0,1,0
+void spherical_to_cart(float phi, float theta, float r, D3DXVECTOR3 *result);
