@@ -2,6 +2,7 @@
 #include "graphics.hpp"
 #include "error2.hpp"
 #include "Logger.hpp"
+#include "D3D11Descriptions.hpp"
 
 #pragma comment (lib, "D3D11.lib")
 #pragma comment (lib, "D3D10_1.lib")
@@ -139,9 +140,24 @@ bool Graphics::init_directx(const HWND hwnd, const int width, const int height)
 		return false;
 	}
 
+  RETURN_ON_FAIL_BOOL(_device->QueryInterface(IID_ID3D11Debug, (void **)&_d3d_debug), LOG_ERROR_LN);
+
   create_back_buffers(width, height);
-#if 0
-  // We need feature level dx 10 to be able to use direct2d (oh, the irony :)
+
+  _default_dss.Attach(rt::D3D11::DepthStencilDescription().Create(_device));
+  _default_blend_state.Attach(rt::D3D11::BlendDescription().Create(_device));
+  for (int i = 0; i < 4; ++i)
+    _default_blend_factors[i] = 1.0f;
+/*
+  if (!init_dx10(adapter))
+    return false;
+*/
+	return true;
+}
+
+bool Graphics::init_dx10(CComPtr<IDXGIAdapter1>& adapter)
+{
+  // We need feature level dx 10 to be able to use direct2d
   if (_feature_level >= D3D_FEATURE_LEVEL_10_0) {
     // Create the DX10 device
     if (FAILED(D3D10CreateDevice1(
@@ -222,9 +238,8 @@ bool Graphics::init_directx(const HWND hwnd, const int width, const int height)
       &m_pTextFormat
       );
   }
-#endif
 
-	return true;
+  return true;
 }
 
 void Graphics::set_default_render_target()

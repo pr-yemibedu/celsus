@@ -29,6 +29,12 @@ public:
 
   D3D_FEATURE_LEVEL feature_level() const { return _feature_level; }
 
+  ID3D11DepthStencilState *default_dss() const { return _default_dss; }
+  uint32_t default_stencil_ref() const { return 0; }
+  ID3D11BlendState *default_blend_state() const { return _default_blend_state; }
+  const float *default_blend_factors() const { return _default_blend_factors; }
+  uint32_t default_sample_mask() const { return 0xffffffff; }
+
   CComPtr<IDXGISwapChain>& swap_chain() { return _swap_chain; }
 
   float fps() const { return _fps; }
@@ -40,6 +46,7 @@ private:
 	~Graphics();
 
   bool create_back_buffers(int width, int height);
+  bool init_dx10(CComPtr<IDXGIAdapter1>& adapter);
 
 	static Graphics* _instance;
   static bool _deleted;
@@ -62,6 +69,12 @@ private:
 	CComPtr<ID3D11Texture2D> _shared_texture;
 	CComPtr<IDXGIKeyedMutex> _keyed_mutex_10;
 	CComPtr<IDXGIKeyedMutex> _keyed_mutex_11;
+
+  CComPtr<ID3D11Debug> _d3d_debug;
+
+  CComPtr<ID3D11DepthStencilState> _default_dss;
+  float _default_blend_factors[4];
+  CComPtr<ID3D11BlendState> _default_blend_state;
 
   D3DXCOLOR _clear_color;
   DWORD _start_fps_time;

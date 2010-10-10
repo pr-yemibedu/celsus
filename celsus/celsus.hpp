@@ -90,4 +90,6 @@ void map_delete(T& container)
 
 string2 get_env_variable(const char *var);
 
+float randf(const float min_value, const float max_value);
+
 #endif // #ifndef CELSUS_HPP

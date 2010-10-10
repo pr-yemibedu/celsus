@@ -76,6 +76,9 @@ inline D3DXVECTOR3 get_scale(const D3DXMATRIX& transform)
 	return D3DXVECTOR3(transform._11, transform._22, transform._33);
 }
 
+// Find a vector orthogonal to r, according to rtr (eq. 4.24, pg 71)
+D3DXVECTOR3 find_orthogonal(const D3DXVECTOR3& r);
+
 
 // phi is angle about x-axis. 0 = 1,0,0
 // theta is angle about y-axis. 0 = 0,1,0
