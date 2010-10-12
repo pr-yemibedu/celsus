@@ -88,7 +88,6 @@
   <ItemGroup>
     <ClCompile Include="celsus\celsus.cpp" />
     <ClCompile Include="celsus\ChunkIO.cpp" />
-    <ClCompile Include="celsus\DX10Utils.cpp" />
     <ClCompile Include="celsus\DX11Utils.cpp" />
     <ClCompile Include="celsus\effect_wrapper.cpp" />
     <ClCompile Include="celsus\file_utils.cpp" />
@@ -120,11 +119,9 @@
     <ClInclude Include="celsus\celsus.hpp" />
     <ClInclude Include="celsus\CelsusExtra.hpp" />
     <ClInclude Include="celsus\ChunkIO.hpp" />
-    <ClInclude Include="celsus\D3D10Descriptions.hpp" />
-    <ClInclude Include="celsus\D3D10Types.hpp" />
     <ClInclude Include="celsus\D3D11Descriptions.hpp" />
-    <ClInclude Include="celsus\DX10Utils.hpp" />
     <ClInclude Include="celsus\DX11Utils.hpp" />
+    <ClInclude Include="celsus\dynamic_vb.hpp" />
     <ClInclude Include="celsus\effect_wrapper.hpp" />
     <ClInclude Include="celsus\error2.hpp" />
     <ClInclude Include="celsus\ErrorHandling.hpp" />

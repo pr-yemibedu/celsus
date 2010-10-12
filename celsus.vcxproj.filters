@@ -21,9 +21,6 @@
     <ClCompile Include="celsus\ChunkIO.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="celsus\DX10Utils.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="celsus\DX11Utils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -87,15 +84,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="celsus\ChunkIO.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="celsus\D3D10Descriptions.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="celsus\D3D10Types.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="celsus\DX10Utils.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="celsus\DX11Utils.hpp">
@@ -177,6 +165,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="celsus\fast_delegate_bind.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="celsus\dynamic_vb.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -2,8 +2,10 @@
 #define _GRAPHICS_HPP_
 
 #include "celsus.hpp"
+#include <d3d11.h>
 #include <D3DX10math.h>
-
+#include <stdint.h>
+#include <atlbase.h>
 
 class Graphics
 {
