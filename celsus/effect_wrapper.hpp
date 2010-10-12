@@ -7,6 +7,7 @@
 #include "DX11Utils.hpp"
 
 #include <hash_map>
+#include <D3D11Shader.h>
 
 class EffectWrapper
 {
@@ -15,6 +16,7 @@ public:
   ~EffectWrapper();
 
 	bool  load_shaders(const char *filename, const char *vs, const char *gs, const char *ps);
+	bool	load_shaders(const char *buf, int len, const char *vs, const char *gs, const char *ps);
 
   void  set_shaders(ID3D11DeviceContext *context);
 
@@ -76,9 +78,7 @@ private:
 
 	enum ShaderType { VertexShader, GeometryShader, PixelShader};
 
-	bool	load_inner(const char* filename, const char* entry_point, ShaderType type);
-
-  string2 _filename;
+	bool	load_inner(const char *buf, int len, const char* entry_point, ShaderType type);
 
   template<class T>
   struct Shader

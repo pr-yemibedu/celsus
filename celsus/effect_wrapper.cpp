@@ -11,28 +11,34 @@ EffectWrapper::~EffectWrapper()
 {
 }
 
-bool EffectWrapper::load_shaders(const char *filename, const char *vs, const char *gs, const char *ps)
+bool EffectWrapper::load_shaders(const char *buf, int len, const char *vs, const char *gs, const char *ps)
 {
-	if (vs && !load_inner(filename, vs, VertexShader))
+	if (vs && !load_inner(buf, len, vs, VertexShader))
 		return false;
 
-	if (gs && !load_inner(filename, gs, GeometryShader))
+	if (gs && !load_inner(buf, len, gs, GeometryShader))
 		return false;
 
-	if (ps && !load_inner(filename, ps, PixelShader))
+	if (ps && !load_inner(buf, len, ps, PixelShader))
 		return false;
 
 	return true;
 }
 
-bool EffectWrapper::load_inner(const char* filename, const char* entry_point, ShaderType type)
+bool EffectWrapper::load_shaders(const char *filename, const char *vs, const char *gs, const char *ps)
 {
 	uint32_t len = 0;
-  uint8_t* buf = load_file(filename, &len);
-  if (buf == NULL || len == 0) {
-    LOG_WARNING_LN("error loading file");
-    return false;
-  }
+	const char *buf = (const char *)load_file(filename, &len);
+	if (buf == NULL || len == 0) {
+		LOG_WARNING_LN("error loading file");
+		return false;
+	}
+
+	return load_shaders(buf, len, vs, gs, ps);
+}
+
+bool EffectWrapper::load_inner(const char *buf, int len, const char* entry_point, ShaderType type)
+{
 
 	ID3DBlob* error_blob = NULL;
 
@@ -62,7 +68,7 @@ bool EffectWrapper::load_inner(const char* filename, const char* entry_point, Sh
 	switch (type)
 	{
 	case VertexShader:
-		if (FAILED(D3DCompile(buf, len, filename, NULL, NULL, entry_point, vs, D3D10_SHADER_ENABLE_STRICTNESS, 0, &_vs._blob, &error_blob))) {
+		if (FAILED(D3DCompile(buf, len, "", NULL, NULL, entry_point, vs, D3D10_SHADER_ENABLE_STRICTNESS, 0, &_vs._blob, &error_blob))) {
 			LOG_ERROR_LN("\n%s", error_blob->GetBufferPointer());
 			return false;
 		}
@@ -71,7 +77,7 @@ bool EffectWrapper::load_inner(const char* filename, const char* entry_point, Sh
 		break;
 
 	case GeometryShader:
-		if (FAILED(D3DCompile(buf, len, filename, NULL, NULL, entry_point, gs, D3D10_SHADER_ENABLE_STRICTNESS, 0, &_gs._blob, &error_blob))) {
+		if (FAILED(D3DCompile(buf, len, "", NULL, NULL, entry_point, gs, D3D10_SHADER_ENABLE_STRICTNESS, 0, &_gs._blob, &error_blob))) {
 			LOG_ERROR_LN("\n%s", error_blob->GetBufferPointer());
 			return false;
 		}
@@ -80,7 +86,7 @@ bool EffectWrapper::load_inner(const char* filename, const char* entry_point, Sh
 		break;
 
 	case PixelShader:
-		if (FAILED(D3DCompile(buf, len, filename, NULL, NULL, entry_point, ps, D3D10_SHADER_ENABLE_STRICTNESS, 0, &_ps._blob, &error_blob))) {
+		if (FAILED(D3DCompile(buf, len, "", NULL, NULL, entry_point, ps, D3D10_SHADER_ENABLE_STRICTNESS, 0, &_ps._blob, &error_blob))) {
 			LOG_ERROR_LN("\n%s", error_blob->GetBufferPointer());
 			return false;
 		}
@@ -89,7 +95,6 @@ bool EffectWrapper::load_inner(const char* filename, const char* entry_point, Sh
 		break;
 	}
 
-  _filename = filename;
   return true;
 }
 
