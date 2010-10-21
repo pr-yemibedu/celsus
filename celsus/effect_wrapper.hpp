@@ -8,6 +8,7 @@
 
 #include <hash_map>
 #include <D3D11Shader.h>
+#include <D3Dcompiler.h>
 
 class EffectWrapper
 {

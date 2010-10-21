@@ -1,5 +1,6 @@
 #pragma once
 #include "DX11Utils.hpp"
+#include <cassert>
 
 // Helper class for dynamic vertex buffers
 template<class Vtx>

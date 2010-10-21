@@ -41,6 +41,10 @@ HRESULT create_static_vertex_buffer(ID3D11Device* device, const uint32_t vertex_
 HRESULT create_static_index_buffer(ID3D11Device* device, const uint32_t index_count, const uint32_t index_size, const void* data, ID3D11Buffer** index_buffer);
 
 HRESULT create_dynamic_vertex_buffer(ID3D11Device *device, const uint32_t vertex_count, const uint32_t vertex_size, ID3D11Buffer** vertex_buffer);
+HRESULT create_cbuffer(ID3D11Device *device, uint32_t buffer_size, ID3D11Buffer **buffer);
+
+void* map_buffer(ID3D11DeviceContext *context, ID3D11Buffer *buffer);
+void unmap_buffer(ID3D11DeviceContext *context, ID3D11Buffer *buffer);
 
 // maps from screen space (0,0) top left, (width-1, height-1) bottom right
 // to clip space (-1,+1) top left, (+1, -1) bottom right

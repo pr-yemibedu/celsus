@@ -40,6 +40,8 @@ public:
   CComPtr<IDXGISwapChain>& swap_chain() { return _swap_chain; }
 
   float fps() const { return _fps; }
+  int width() const { return _width; }
+  int height() const { return _height; }
 
 private:
 	DISALLOW_COPY_AND_ASSIGN(Graphics);

@@ -4,6 +4,8 @@
 #include "Logger.hpp"
 #include "D3D11Descriptions.hpp"
 
+using namespace std;
+
 #pragma comment (lib, "D3D11.lib")
 #pragma comment (lib, "D3D10_1.lib")
 #pragma comment (lib, "D2D1.lib")
@@ -124,9 +126,22 @@ bool Graphics::init_directx(const HWND hwnd, const int width, const int height)
 		return false;
 
 	// Use the first adapter
-	CComPtr<IDXGIAdapter1> adapter; 
-	if (FAILED(dxgi_factory->EnumAdapters1(0, &adapter)))
-		return false;
+	vector<CComPtr<IDXGIAdapter1> > adapters;
+  UINT i = 0;
+  IDXGIAdapter1 *adapter = nullptr;
+  bool found_perfhud = false;
+  while (!FAILED(dxgi_factory->EnumAdapters1(i++, &adapter))) {
+    adapters.push_back(adapter);
+    DXGI_ADAPTER_DESC desc;
+    adapter->GetDesc(&desc);
+    if (wcscmp(desc.Description, L"NVIDIA PerfHud") == 0) {
+      found_perfhud = true;
+    }
+  }
+
+  if (!found_perfhud)
+    adapter = adapters.front();
+
 
 	const int flags = D3D11_CREATE_DEVICE_DEBUG | D3D11_CREATE_DEVICE_BGRA_SUPPORT | D3D11_CREATE_DEVICE_SINGLETHREADED;
 
