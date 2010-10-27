@@ -12,6 +12,7 @@ public:
   DynamicVb()
     : _mapped(false)
     , _org(nullptr)
+    , _num_verts(0)
   {
   }
 
@@ -44,18 +45,16 @@ public:
     c->Unmap(_vb, 0);
     _mapped = false;
 
-    int res = 0;
     // calc # verts inserted
-    if (final != NULL)
-      res = final - _org;
-    return res;
-
+    return (_num_verts = final != NULL ? final - _org : 0);
   }
 
-  ID3D11Buffer *vb() { return _vb; }
+  ID3D11Buffer *get() { return _vb; }
+  int num_verts() const { return _num_verts; }
 
 private:
   Vtx *_org;
   bool _mapped;
+  int _num_verts;
   CComPtr<ID3D11Buffer> _vb;
 };

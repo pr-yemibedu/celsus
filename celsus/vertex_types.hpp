@@ -26,6 +26,7 @@ struct PosCol
   PosCol() {}
 	PosCol(float x, float y, float z, float r, float g, float b, float a) : pos(x, y, z), col(r, g, b, a) {}
   PosCol(const D3DXVECTOR3& pos, const D3DXCOLOR& col) : pos(pos), col(col) {}
+  PosCol(const D3DXVECTOR2& pos, float z, const D3DXCOLOR& col) : pos(pos.x, pos.y, z), col(col) {}
   PosCol(const D3DXVECTOR3& pos) : pos(pos) {}
   D3DXVECTOR3 pos;
   D3DXCOLOR col;

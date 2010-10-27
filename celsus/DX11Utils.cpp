@@ -56,3 +56,9 @@ D3DXVECTOR3 screen_to_clip(const D3DXVECTOR3& screen, const D3D11_VIEWPORT& v)
 {
 	return D3DXVECTOR3((screen.x - v.Width / 2) / (v.Width / 2), (v.Height / 2 - screen.y) / (v.Height / 2), 0);
 }
+
+void screen_to_clip(float x, float y, float w, float h, float *ox, float *oy)
+{
+  *ox = (x - w / 2) / (w / 2);
+  *oy = (h/2 - y) / (h/2);
+}

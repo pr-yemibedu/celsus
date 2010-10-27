@@ -1,5 +1,6 @@
 #pragma once
 #include <D3DX10math.h>
+#include <cassert>
 
 static const double kPi = 3.14159265358979323846;
 
@@ -83,3 +84,44 @@ D3DXVECTOR3 find_orthogonal(const D3DXVECTOR3& r);
 // phi is angle about x-axis. 0 = 1,0,0
 // theta is angle about y-axis. 0 = 0,1,0
 void spherical_to_cart(float phi, float theta, float r, D3DXVECTOR3 *result);
+
+inline D3DXMATRIX matrix_from_vectors(const D3DXVECTOR3& v1, const D3DXVECTOR3& v2, const D3DXVECTOR3& v3, const D3DXVECTOR3& v4)
+{
+  return D3DXMATRIX(
+    v1.x, v1.y, v1.z, 0,
+    v2.x, v2.y, v2.z, 0,
+    v3.x, v3.y, v3.z, 0,
+    v4.x, v4.y, v4.z, 1);
+}
+
+inline D3DXMATRIX matrix_from_vectors(const D3DXVECTOR3& v1, const D3DXVECTOR3& v2, const D3DXVECTOR3& v3)
+{
+  return D3DXMATRIX(
+    v1.x, v1.y, v1.z, 0,
+    v2.x, v2.y, v2.z, 0,
+    v3.x, v3.y, v3.z, 0,
+    0, 0, 0, 1);
+}
+
+inline D3DXVECTOR3 matrix_get_row(const D3DXMATRIX& m, int row)
+{
+  switch (row) {
+  case 0: return D3DXVECTOR3(m._11, m._12, m._13);
+  case 1: return D3DXVECTOR3(m._21, m._22, m._23);
+  case 2: return D3DXVECTOR3(m._31, m._32, m._33);
+  case 3: return D3DXVECTOR3(m._41, m._42, m._43);
+  default:
+    assert(false);
+  }
+  return D3DXVECTOR3(0,0,0);
+}
+
+inline void matrix_set_row(D3DXMATRIX &m, int row, const D3DXVECTOR3& v)
+{
+  switch (row) {
+  case 0: m._11 = v.x; m._12 = v.y; m._13 = v.z; break;
+  case 1: m._21 = v.x; m._22 = v.y; m._23 = v.z; break;
+  case 2: m._31 = v.x; m._32 = v.y; m._33 = v.z; break;
+  case 3: m._41 = v.x; m._42 = v.y; m._43 = v.z; break;
+  }
+}

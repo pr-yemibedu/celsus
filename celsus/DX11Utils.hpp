@@ -49,5 +49,6 @@ void unmap_buffer(ID3D11DeviceContext *context, ID3D11Buffer *buffer);
 // maps from screen space (0,0) top left, (width-1, height-1) bottom right
 // to clip space (-1,+1) top left, (+1, -1) bottom right
 D3DXVECTOR3 screen_to_clip(const D3DXVECTOR3& screen, const D3D11_VIEWPORT& v);
+void screen_to_clip(float x, float y, float w, float h, float *ox, float *oy);
 
 #endif
