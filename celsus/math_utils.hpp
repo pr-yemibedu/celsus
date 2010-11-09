@@ -125,3 +125,10 @@ inline void matrix_set_row(D3DXMATRIX &m, int row, const D3DXVECTOR3& v)
   case 3: m._41 = v.x; m._42 = v.y; m._43 = v.z; break;
   }
 }
+
+// if mtx = proj-space, planes are in camera-space
+// if mtx = view*proj-space, planes are in world-space and so on
+void calc_planes(const D3DXMATRIX& mtx, D3DXPLANE *planes);
+
+// computes the intersection of 2 planes, according to RTCD, page 209 (unoptimized version)
+bool intersect(const D3DXPLANE& p1, const D3DXPLANE& p2, D3DXVECTOR3 *p, D3DXVECTOR3 *d);
