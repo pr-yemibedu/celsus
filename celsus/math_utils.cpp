@@ -74,7 +74,7 @@ void calc_planes(const D3DXMATRIX& m, D3DXPLANE *planes)
     D3DXPlaneNormalize(&planes[i], &planes[i]);
 }
 
-bool intersect(const D3DXPLANE& p1, const D3DXPLANE& p2, D3DXVECTOR3 *p, D3DXVECTOR3 *d)
+bool intersect_unopt(const D3DXPLANE& p1, const D3DXPLANE& p2, D3DXVECTOR3 *p, D3DXVECTOR3 *d)
 {
   // note, d3dx stores planes in ax + by + cz + d = 0 form, but rtcd wants them
   // in ax + by + cz = d form.
@@ -100,5 +100,44 @@ bool intersect(const D3DXPLANE& p1, const D3DXPLANE& p2, D3DXVECTOR3 *p, D3DXVEC
   const float k2 = (p2d*d11 - p1d*d12) / denom;
   *p = k1*p1n + k2*p2n;
 
+  return true;
+}
+
+bool intersect(const D3DXPLANE& p1, const D3DXPLANE& p2, D3DXVECTOR3 *p, D3DXVECTOR3 *d)
+{
+  const D3DXVECTOR3 p1n(p1.a, p1.b, p1.c);
+  const D3DXVECTOR3 p2n(p2.a, p2.b, p2.c);
+
+  D3DXVECTOR3 dd = vec3_cross(p1n, p2n);
+  const float denom = vec3_dot(dd, dd);
+  const float kEps = 0.0001f;
+  if (denom < kEps)
+    return false;
+
+  const float p1d = -p1.d;
+  const float p2d = -p2.d;
+
+  *d = dd;
+  *p = vec3_cross(p1d*p2n - p2d*p1n, dd) / denom;
+  return true;
+}
+
+bool intersect(const D3DXPLANE& p1, const D3DXPLANE& p2, const D3DXPLANE& p3, D3DXVECTOR3 *p)
+{
+  const D3DXVECTOR3 p1n(p1.a, p1.b, p1.c);
+  const D3DXVECTOR3 p2n(p2.a, p2.b, p2.c);
+  const D3DXVECTOR3 p3n(p3.a, p3.b, p3.c);
+
+  D3DXVECTOR3 u = vec3_cross(p2n, p3n);
+  float denom = vec3_dot(p1n, u);
+  const float kEps = 0.0001f;
+  if (fabs(denom) < kEps)
+    return false; // planes do not intersect in a point
+
+  const float p1d = -p1.d;
+  const float p2d = -p2.d;
+  const float p3d = -p3.d;
+
+  *p = (p1d * u + vec3_cross(p1n, p3d * p2n - p2d * p3n)) / denom;
   return true;
 }

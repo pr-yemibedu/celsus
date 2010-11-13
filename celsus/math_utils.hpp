@@ -131,4 +131,8 @@ inline void matrix_set_row(D3DXMATRIX &m, int row, const D3DXVECTOR3& v)
 void calc_planes(const D3DXMATRIX& mtx, D3DXPLANE *planes);
 
 // computes the intersection of 2 planes, according to RTCD, page 209 (unoptimized version)
+bool intersect_unopt(const D3DXPLANE& p1, const D3DXPLANE& p2, D3DXVECTOR3 *p, D3DXVECTOR3 *d);
 bool intersect(const D3DXPLANE& p1, const D3DXPLANE& p2, D3DXVECTOR3 *p, D3DXVECTOR3 *d);
+
+// computes the point at which 3 planes intersect (if at all)
+bool intersect(const D3DXPLANE& p1, const D3DXPLANE& p2, const D3DXPLANE& p3, D3DXVECTOR3 *p);
