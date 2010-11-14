@@ -7,48 +7,10 @@
 #include <d3d11.h>
 //#include <rt/Exceptions/COMException.h>
 
-#define THR(expr_) rt::COMException::ThrowHResult(expr_, _T(#expr_), _T(__FILE__), __LINE__)
+//#define NULL_ON_FAIL(expr_) rt::COMException::ThrowHResult(expr_, _T(#expr_), _T(__FILE__), __LINE__)
+#define NULL_ON_FAIL(expr) if (FAILED(expr)) return NULL;
 
 namespace rt { 
-	
-	class Exception : public std::exception
-	{
-	public:
-		Exception(char const *message) : exception(message)
-		{
-		}
-	};
-
-	class COMException : public Exception
-	{
-	public:
-		explicit COMException(HRESULT status, LPCTSTR expr, LPCTSTR file, UINT line)
-			: Exception("COM error"),
-			m_status(status),
-			m_expr(expr),
-			m_file(file),
-			m_line(line)
-		{
-		}
-		HRESULT Status() const { return m_status; }
-		LPCTSTR File() const { return m_file; }
-		UINT Line() const { return m_line; }
-
-		static HRESULT ThrowHResult(HRESULT status, LPCTSTR expr, LPCTSTR file, UINT line)
-		{
-			if (FAILED(status))
-			{
-				throw COMException(status, expr, file, line);
-			}
-			return status;
-		}
-
-	private:
-		HRESULT m_status;
-		LPCTSTR m_expr;
-		LPCTSTR m_file;
-		UINT m_line;
-	};
 
 namespace D3D11
 {
@@ -115,7 +77,7 @@ namespace D3D11
 		ID3D11DepthStencilState *Create(ID3D11Device *device)
 		{
 			ID3D11DepthStencilState *result = 0;
-			THR(device->CreateDepthStencilState(this, &result));
+			NULL_ON_FAIL(device->CreateDepthStencilState(this, &result));
 			return result;
 		}
 
@@ -170,7 +132,7 @@ namespace D3D11
 		ID3D11BlendState *Create(ID3D11Device *device)
 		{
 			ID3D11BlendState *result = 0;
-			THR(device->CreateBlendState(this, &result));
+			NULL_ON_FAIL(device->CreateBlendState(this, &result));
 			return result;
 		}
 
@@ -200,7 +162,7 @@ namespace D3D11
 		ID3D11RasterizerState *Create(ID3D11Device *device)
 		{
 			ID3D11RasterizerState *result = 0;
-			THR(device->CreateRasterizerState(this, &result));
+			NULL_ON_FAIL(device->CreateRasterizerState(this, &result));
 			return result;
 		}
 
@@ -225,7 +187,7 @@ namespace D3D11
 		{
 			assert(data || (Usage != D3D11_USAGE_IMMUTABLE));
 			ID3D11Buffer *result = 0;
-			THR(device->CreateBuffer(this, data, &result));
+			NULL_ON_FAIL(device->CreateBuffer(this, data, &result));
 			return result;
 		}
 
@@ -252,7 +214,7 @@ namespace D3D11
 		{
 			assert(data || (Usage != D3D11_USAGE_IMMUTABLE));
 			ID3D11Texture1D *result = 0;
-			THR(device->CreateTexture1D(this, data, &result));
+			NULL_ON_FAIL(device->CreateTexture1D(this, data, &result));
 			return result;
 		}
 
@@ -281,7 +243,7 @@ namespace D3D11
 		{
 			assert(data || (Usage != D3D11_USAGE_IMMUTABLE));
 			ID3D11Texture2D *result = 0;
-			THR(device->CreateTexture2D(this, data, &result));
+			NULL_ON_FAIL(device->CreateTexture2D(this, data, &result));
 			return result;
 		}
 
@@ -307,7 +269,7 @@ namespace D3D11
 		{
 			assert(data || (Usage != D3D11_USAGE_IMMUTABLE));
 			ID3D11Texture3D *result = 0;
-			THR(device->CreateTexture3D(this, data, &result));
+			NULL_ON_FAIL(device->CreateTexture3D(this, data, &result));
 			return result;
 		}
 
@@ -335,7 +297,7 @@ namespace D3D11
 		ID3D11ShaderResourceView *Create(ID3D11Device *device, ID3D11Resource *resource)
 		{
 			ID3D11ShaderResourceView *result = 0;
-			THR(device->CreateShaderResourceView(resource, this, &result));
+			NULL_ON_FAIL(device->CreateShaderResourceView(resource, this, &result));
 			return result;
 		}
 
@@ -597,7 +559,7 @@ namespace D3D11
 		ID3D11RenderTargetView *Create(ID3D11Device *device, ID3D11Resource *resource)
 		{
 			ID3D11RenderTargetView *result = 0;
-			THR(device->CreateRenderTargetView(resource, this, &result));
+			NULL_ON_FAIL(device->CreateRenderTargetView(resource, this, &result));
 			return result;
 		}
 
@@ -765,7 +727,7 @@ namespace D3D11
 		ID3D11DepthStencilView *Create(ID3D11Device *device, ID3D11Resource *resource)
 		{
 			ID3D11DepthStencilView *result = 0;
-			THR(device->CreateDepthStencilView(resource, this, &result));
+			NULL_ON_FAIL(device->CreateDepthStencilView(resource, this, &result));
 			return result;
 		}
 
@@ -898,7 +860,7 @@ namespace D3D11
 		ID3D11UnorderedAccessView *Create(ID3D11Device *device, ID3D11Resource *resource)
 		{
 			ID3D11UnorderedAccessView *result = 0;
-			THR(device->CreateUnorderedAccessView(resource, this, &result));
+			NULL_ON_FAIL(device->CreateUnorderedAccessView(resource, this, &result));
 			return result;
 		}
 
@@ -1033,7 +995,7 @@ namespace D3D11
 		ID3D11SamplerState *Create(ID3D11Device *device)
 		{
 			ID3D11SamplerState *result = 0;
-			THR(device->CreateSamplerState(this, &result));
+			NULL_ON_FAIL(device->CreateSamplerState(this, &result));
 			return result;
 		}
 
@@ -1054,7 +1016,7 @@ namespace D3D11
 		ID3D11Query *Create(ID3D11Device *device)
 		{
 			ID3D11Query *result = 0;
-			THR(device->CreateQuery(this, &result));
+			NULL_ON_FAIL(device->CreateQuery(this, &result));
 			return result;
 		}
 
@@ -1078,7 +1040,7 @@ namespace D3D11
 		ID3D11Predicate *Create(ID3D11Device *device)
 		{
 			ID3D11Predicate *result = 0;
-			THR(device->CreatePredicate(this, &result));
+			NULL_ON_FAIL(device->CreatePredicate(this, &result));
 			return result;
 		}
 
@@ -1098,7 +1060,7 @@ namespace D3D11
 		ID3D11Counter *Create(ID3D11Device *device)
 		{
 			ID3D11Counter *result = 0;
-			THR(device->CreateCounter(this, &result));
+			NULL_ON_FAIL(device->CreateCounter(this, &result));
 			return result;
 		}
 
