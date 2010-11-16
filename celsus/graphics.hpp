@@ -31,7 +31,8 @@ public:
 
   D3D_FEATURE_LEVEL feature_level() const { return _feature_level; }
 
-  ID3D11DepthStencilState *default_dss() const { return _default_dss; }
+  ID3D11RasterizerState *default_rasterizer_state() const { return _default_rasterizer_state; }
+  ID3D11DepthStencilState *default_depth_stencil_state() const { return _default_depth_stencil_state; }
   uint32_t default_stencil_ref() const { return 0; }
   ID3D11BlendState *default_blend_state() const { return _default_blend_state; }
   const float *default_blend_factors() const { return _default_blend_factors; }
@@ -50,8 +51,6 @@ private:
 	~Graphics();
 
   bool create_back_buffers(int width, int height);
-  bool init_dx10(CComPtr<IDXGIAdapter1>& adapter);
-
 	static Graphics* _instance;
   static bool _deleted;
 
@@ -61,7 +60,6 @@ private:
 	DXGI_FORMAT _buffer_format;
   D3D_FEATURE_LEVEL _feature_level;
 	CComPtr<ID3D11Device> _device;
-	CComPtr<ID3D10Device1> _device10;
 	CComPtr<IDXGISwapChain> _swap_chain;
 	CComPtr<ID3D11DeviceContext> _immediate_context;
 	CComPtr<ID3D11RenderTargetView> _render_target_view;
@@ -76,7 +74,9 @@ private:
 
   CComPtr<ID3D11Debug> _d3d_debug;
 
-  CComPtr<ID3D11DepthStencilState> _default_dss;
+  CComPtr<ID3D11RasterizerState> _default_rasterizer_state;
+  CComPtr<ID3D11DepthStencilState> _default_depth_stencil_state;
+  CComPtr<ID3D11SamplerState> _default_sampler_state;
   float _default_blend_factors[4];
   CComPtr<ID3D11BlendState> _default_blend_state;
 
