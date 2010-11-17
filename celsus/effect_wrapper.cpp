@@ -69,7 +69,7 @@ bool EffectWrapper::load_inner(const char *buf, int len, const char* entry_point
 	{
 	case VertexShader:
 		if (FAILED(D3DCompile(buf, len, "", NULL, NULL, entry_point, vs, D3D10_SHADER_ENABLE_STRICTNESS, 0, &_vs._blob, &error_blob))) {
-			LOG_ERROR_LN("\n%s", error_blob->GetBufferPointer());
+			LOG_ERROR_LN("%s\n", error_blob->GetBufferPointer());
 			return false;
 		}
 		RETURN_ON_FAIL_BOOL_E(device->CreateVertexShader(_vs._blob->GetBufferPointer(), _vs._blob->GetBufferSize(), NULL, &_vs._shader));
@@ -78,7 +78,7 @@ bool EffectWrapper::load_inner(const char *buf, int len, const char* entry_point
 
 	case GeometryShader:
 		if (FAILED(D3DCompile(buf, len, "", NULL, NULL, entry_point, gs, D3D10_SHADER_ENABLE_STRICTNESS, 0, &_gs._blob, &error_blob))) {
-			LOG_ERROR_LN("\n%s", error_blob->GetBufferPointer());
+      LOG_ERROR_LN("%s\n", error_blob->GetBufferPointer());
 			return false;
 		}
 		RETURN_ON_FAIL_BOOL_E(device->CreateGeometryShader(_gs._blob->GetBufferPointer(), _gs._blob->GetBufferSize(), NULL, &_gs._shader));
@@ -87,7 +87,7 @@ bool EffectWrapper::load_inner(const char *buf, int len, const char* entry_point
 
 	case PixelShader:
 		if (FAILED(D3DCompile(buf, len, "", NULL, NULL, entry_point, ps, D3D10_SHADER_ENABLE_STRICTNESS, 0, &_ps._blob, &error_blob))) {
-			LOG_ERROR_LN("\n%s", error_blob->GetBufferPointer());
+      LOG_ERROR_LN("%s\n", error_blob->GetBufferPointer());
 			return false;
 		}
 		RETURN_ON_FAIL_BOOL_E(device->CreatePixelShader(_ps._blob->GetBufferPointer(), _ps._blob->GetBufferSize(), NULL, &_ps._shader));
