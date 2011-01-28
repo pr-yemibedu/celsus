@@ -34,6 +34,14 @@ namespace
   }
 }
 
+bool load_file(const char* filename, AsArray<byte> *data)
+{
+  uint32_t len;
+  byte *buf = load_file_inner(filename, false, &len);
+  *data = as_array(buf, len);
+  return !!buf;
+}
+
 uint8_t* load_file(const char* filename, uint32_t* len)
 {
   return load_file_inner(filename, false, len);

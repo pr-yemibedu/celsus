@@ -92,4 +92,21 @@ string2 get_env_variable(const char *var);
 
 float randf(const float min_value, const float max_value);
 
+// wrapper around a <data,size> tuple
+template<typename T>
+class AsArray
+{
+public:
+  AsArray(T* data, int n) : _data(data), _n(n) {}
+  AsArray(std::vector<T>& v) : _data(&v[0]), _n((int)v.size()) {}
+  int size() const { return _n; }
+  T *data() { return _data; }
+private:
+  T *_data;
+  int _n;
+};
+
+template<typename T> AsArray<T> as_array(T *data, int len) { return AsArray<T>(data, len); }
+
+
 #endif // #ifndef CELSUS_HPP

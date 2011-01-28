@@ -210,6 +210,30 @@ const char *parse_floats(const char *buf, const char *buf_end, std::vector<float
 	return tmp;
 }
 
+const char *parse_floats(const char *buf, const char *buf_end, float *out, int *count)
+{
+  const int m = *count;
+  int c = 0;
+  const char *tmp = NULL;
+  while (buf && (buf = scan_parse_float(buf, buf_end, out++)) != NULL && (tmp = buf) != NULL && ++c < m) {
+    buf = skip_chars(buf, buf_end, ", \t");
+  }
+  *count = c;
+  return tmp;
+}
+
+const char *parse_ints(const char *buf, const char *buf_end, int *out, int *count)
+{
+  const int m = *count;
+  int c = 0;
+  const char *tmp = NULL;
+  while (buf && (buf = scan_parse_int(buf, buf_end, out++)) != NULL && (tmp = buf) != NULL && ++c < m) {
+    buf = skip_chars(buf, buf_end, ", \t");
+  }
+  *count = c;
+  return tmp;
+}
+
 const char *parse_ints(const char *buf, const char *buf_end, std::vector<int>* out)
 {
   int i;
@@ -370,6 +394,22 @@ bool TextScanner::read_floats(std::vector<float> *out)
 	return !out->empty();
 }
 
+bool TextScanner::read_floats(float *out, int *count)
+{
+  if (_line_mode) {
+    if (!skip_dummy_lines())
+      return false;
+  }
+
+  if (eof())
+    return false;
+
+  _prev = _cur;
+
+  _cur = parse_floats(_cur, _buf_end, out, count);
+  return *count > 0;
+}
+
 bool TextScanner::read_ints(std::vector<int> *out)
 {
   if (_line_mode) {
@@ -387,6 +427,25 @@ bool TextScanner::read_ints(std::vector<int> *out)
 		_cur = tmp;
 
 	return !out->empty();
+}
+
+bool TextScanner::read_ints(int *out, int *count)
+{
+  if (_line_mode) {
+    if (!skip_dummy_lines())
+      return false;
+  }
+
+  if (eof())
+    return false;
+
+  _prev = _cur;
+
+  if (const char *tmp = ::parse_ints(_cur, _buf_end, out, count))
+    _cur = tmp;
+
+  return *count > 0;
+
 }
 
 bool TextScanner::read_int(int *out)

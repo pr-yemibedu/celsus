@@ -10,11 +10,12 @@ public:
   MemoryMappedFile();
   ~MemoryMappedFile();
 
-  bool open(const char* filename, uint8_t*& data, uint32_t& data_len);
+  bool open(const char* filename, void** data, uint64_t* data_len, size_t lock_size);
+	bool lock(uint64_t ofs, size_t len);
 private:
-  HANDLE file_handle_;
-  HANDLE file_mapping_;
-  void* view_;
+  HANDLE _file_handle;
+  HANDLE _file_mapping;
+  void* _view;
 };
 
 #endif 

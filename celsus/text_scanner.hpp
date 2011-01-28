@@ -22,10 +22,12 @@ public:
 	bool peek(char *res);
 	bool peek(char *res, const int count);
 	bool read_float(float *res);
-	bool read_floats(std::vector<float>* out);
+  bool read_floats(std::vector<float>* out);
+  bool read_floats(float *out, int *count);
   bool read_hex(uint32_t *out);
 	bool read_int(int *out);
-	bool read_ints(std::vector<int>* out);
+  bool read_ints(std::vector<int>* out);
+  bool read_ints(int *out, int *count);
 	bool read_line(const char **res, int *len);
 	bool read_line(string2 *out);
 	bool read_string(string2 *out);
@@ -43,6 +45,9 @@ public:
 
 	void rewind();
 	void reset();
+
+  int buf_size() const { return _buf_end - _buf; }
+
 private:
 	const char *_buf;
 	const char *_buf_end;
