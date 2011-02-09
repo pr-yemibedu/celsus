@@ -4,6 +4,7 @@
 #include <functional>
 #include <windows.h>
 #include "string_utils.hpp"
+#include <vector>
 
 #define SAFE_RELEASE(x) if( (x) != 0 ) { (x)->Release(); (x) = 0; }
 #define SAFE_FREE(x) if( (x) != 0 ) { free((void*)(x)); (x) = 0; }
