@@ -47,6 +47,7 @@
     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(LUA);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -94,6 +95,7 @@
     <ClCompile Include="celsus\file_watcher.cpp" />
     <ClCompile Include="celsus\graphics.cpp" />
     <ClCompile Include="celsus\Logger.cpp" />
+    <ClCompile Include="celsus\lua_utils.cpp" />
     <ClCompile Include="celsus\math_utils.cpp" />
     <ClCompile Include="celsus\MemoryMappedFile.cpp" />
     <ClCompile Include="celsus\path_utils.cpp" />
@@ -131,6 +133,7 @@
     <ClInclude Include="celsus\file_watcher.hpp" />
     <ClInclude Include="celsus\graphics.hpp" />
     <ClInclude Include="celsus\Logger.hpp" />
+    <ClInclude Include="celsus\lua_utils.hpp" />
     <ClInclude Include="celsus\math_utils.hpp" />
     <ClInclude Include="celsus\MemoryMappedFile.hpp" />
     <ClInclude Include="celsus\path_utils.hpp" />

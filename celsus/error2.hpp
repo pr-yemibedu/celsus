@@ -1,6 +1,8 @@
 #ifndef _ERROR2_HPP_
 #define _ERROR2_HPP_
 
+#include "Logger.hpp"
+
 class ErrorObj
 {
 public:

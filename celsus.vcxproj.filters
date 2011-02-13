@@ -75,6 +75,9 @@
     <ClCompile Include="celsus\math_utils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="celsus\lua_utils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="celsus\celsus.hpp">
@@ -168,6 +171,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="celsus\dynamic_vb.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="celsus\lua_utils.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

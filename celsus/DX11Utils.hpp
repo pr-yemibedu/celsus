@@ -23,6 +23,12 @@ struct CD3D11_INPUT_ELEMENT_DESC : public D3D11_INPUT_ELEMENT_DESC
 	}
 };
 
+struct StaticBuffer {
+	CComPtr<ID3D11Buffer> buffer;
+	int stride;
+	int num_elems;
+};
+
 template<class T>
 HRESULT create_static_vertex_buffer(ID3D11Device* device, const std::vector<T>& v, ID3D11Buffer** vertex_buffer)
 {
@@ -35,9 +41,16 @@ HRESULT create_static_index_buffer(ID3D11Device* device, const std::vector<T>& v
 	return create_static_index_buffer(device, v.size(), sizeof(T), (const uint8_t*)&v[0], vertex_buffer);
 }
 
+void set_ib(ID3D11DeviceContext *context, const StaticBuffer &ib);
+void set_vb(ID3D11DeviceContext *context, const StaticBuffer &ib);
+
+void set_ib(ID3D11DeviceContext *context, ID3D11Buffer *buf);
 void set_vb(ID3D11DeviceContext *context, ID3D11Buffer *buf, const uint32_t stride);
 
+HRESULT create_static_vertex_buffer(ID3D11Device* device, const uint32_t vertex_count, const uint32_t vertex_size, const void* data, StaticBuffer *vb);
 HRESULT create_static_vertex_buffer(ID3D11Device* device, const uint32_t vertex_count, const uint32_t vertex_size, const void* data, ID3D11Buffer** vertex_buffer);
+
+HRESULT create_static_index_buffer(ID3D11Device* device, const uint32_t index_count, const uint32_t index_size, const void* data, StaticBuffer *ib);
 HRESULT create_static_index_buffer(ID3D11Device* device, const uint32_t index_count, const uint32_t index_size, const void* data, ID3D11Buffer** index_buffer);
 
 HRESULT create_dynamic_vertex_buffer(ID3D11Device *device, const uint32_t vertex_count, const uint32_t vertex_size, ID3D11Buffer** vertex_buffer);
@@ -50,5 +63,15 @@ void unmap_buffer(ID3D11DeviceContext *context, ID3D11Buffer *buffer);
 // to clip space (-1,+1) top left, (+1, -1) bottom right
 D3DXVECTOR3 screen_to_clip(const D3DXVECTOR3& screen, const D3D11_VIEWPORT& v);
 void screen_to_clip(float x, float y, float w, float h, float *ox, float *oy);
+
+inline DXGI_FORMAT index_size_to_format(int size) 
+{
+	switch (size) {
+	case 16: return DXGI_FORMAT_R16_UINT;
+	case 32: return DXGI_FORMAT_R32_UINT;
+	default: assert(false);
+	}
+	return DXGI_FORMAT_UNKNOWN;
+}
 
 #endif

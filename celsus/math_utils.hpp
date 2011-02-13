@@ -13,6 +13,10 @@ static const D3DXVECTOR3 kVec3Zero(0,0,0);
 static const D3DXVECTOR3 kVec3One(1,1,1);
 static const D3DXQUATERNION kQuatId(0, 0, 0, 1);
 
+static const D3DXVECTOR3 kDirX(1,0,0);
+static const D3DXVECTOR3 kDirY(0,1,0);
+static const D3DXVECTOR3 kDirZ(0,0,1);
+
 // A frame is a ON base and a position
 struct Frame
 {

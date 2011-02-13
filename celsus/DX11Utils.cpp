@@ -12,6 +12,13 @@ namespace
   }
 }
 
+HRESULT create_static_vertex_buffer(ID3D11Device* device, const uint32_t vertex_count, const uint32_t vertex_size, const void* data, StaticBuffer *vb)
+{
+	vb->num_elems = vertex_count;
+	vb->stride = vertex_size;
+	return create_buffer_inner(device, CD3D11_BUFFER_DESC(vertex_count * vertex_size, D3D11_BIND_VERTEX_BUFFER, D3D11_USAGE_IMMUTABLE), data, &vb->buffer.p);
+}
+
 HRESULT create_static_vertex_buffer(ID3D11Device* device, const uint32_t vertex_count, const uint32_t vertex_size, const void* data, ID3D11Buffer** vertex_buffer) 
 {
   return create_buffer_inner(device, CD3D11_BUFFER_DESC(vertex_count * vertex_size, D3D11_BIND_VERTEX_BUFFER, D3D11_USAGE_IMMUTABLE), data, vertex_buffer);
@@ -20,6 +27,13 @@ HRESULT create_static_vertex_buffer(ID3D11Device* device, const uint32_t vertex_
 HRESULT create_dynamic_vertex_buffer(ID3D11Device *device, const uint32_t vertex_count, const uint32_t vertex_size, ID3D11Buffer** vertex_buffer)
 {
   return create_buffer_inner(device, CD3D11_BUFFER_DESC(vertex_count * vertex_size, D3D11_BIND_VERTEX_BUFFER, D3D11_USAGE_DYNAMIC, D3D11_CPU_ACCESS_WRITE), NULL, vertex_buffer);
+}
+
+HRESULT create_static_index_buffer(ID3D11Device* device, const uint32_t index_count, const uint32_t index_size, const void* data, StaticBuffer *ib) 
+{
+	ib->num_elems = index_count;
+	ib->stride = index_size;
+	return create_buffer_inner(device, CD3D11_BUFFER_DESC(index_count * index_size, D3D11_BIND_INDEX_BUFFER, D3D11_USAGE_IMMUTABLE), data, &ib->buffer.p);
 }
 
 HRESULT create_static_index_buffer(ID3D11Device* device, const uint32_t index_count, const uint32_t index_size, const void* data, ID3D11Buffer** index_buffer) 
@@ -38,6 +52,16 @@ void set_vb(ID3D11DeviceContext *context, ID3D11Buffer *buf, const uint32_t stri
   ID3D11Buffer* bufs[] = { buf };
   uint32_t strides[] = { stride };
   context->IASetVertexBuffers(0, 1, bufs, strides, ofs);
+}
+
+void set_ib(ID3D11DeviceContext *context, const StaticBuffer &ib)
+{
+	context->IASetIndexBuffer(ib.buffer, index_size_to_format(ib.stride), 0);
+}
+
+void set_vb(ID3D11DeviceContext *context, const StaticBuffer &vb)
+{
+	return set_vb(context, vb.buffer, vb.stride);
 }
 
 void* map_buffer(ID3D11DeviceContext *context, ID3D11Buffer *buffer)

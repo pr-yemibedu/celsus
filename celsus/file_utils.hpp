@@ -2,6 +2,7 @@
 #include <vector>
 #include "string_utils.hpp"
 #include "celsus.hpp"
+#include <stdint.h>
 
 bool file_exists(const char *filename);
 bool get_file_size(const char *filename, DWORD *low_size, DWORD *high_size);
