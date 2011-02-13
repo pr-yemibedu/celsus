@@ -190,42 +190,27 @@ bool lua_load_states(const char *filename,
     return false;
   }
 
-  // XXX: To get this to work, the lua_longjmp struct must be moved from ldo.c to ldo.h. There
-  // has to be a cleaner way to do this..
-  lua_longjmp jmp;
-  jmp.previous = l->errorJmp;
-  jmp.status = 0;
-  l->errorJmp = &jmp;
+	CComPtr<ID3D11BlendState> tmp_blend;
+	CComPtr<ID3D11SamplerState> tmp_sampler;
+	CComPtr<ID3D11DepthStencilState> tmp_dss;
+	CComPtr<ID3D11RasterizerState> tmp_rast;
 
-  int err;
-  if (!(err = setjmp(jmp.b))) {
+	if (blend && !blend_state_from_lua(l, blend, tmp_blend))
+		return false;
 
-    CComPtr<ID3D11BlendState> tmp_blend;
-    CComPtr<ID3D11SamplerState> tmp_sampler;
-    CComPtr<ID3D11DepthStencilState> tmp_dss;
-    CComPtr<ID3D11RasterizerState> tmp_rast;
+	if (depth && !depth_stencil_state_from_lua(l, depth, tmp_dss))
+		return false;
 
-    if (blend && !blend_state_from_lua(l, blend, tmp_blend))
-      return false;
+	if (sampler && !sampler_from_lua(l, sampler, tmp_sampler))
+		return false;
 
-    if (depth && !depth_stencil_state_from_lua(l, depth, tmp_dss))
-      return false;
+	if (rasterizer && !rasterizer_state_from_lua(l, rasterizer, tmp_rast))
+		return false;
 
-    if (sampler && !sampler_from_lua(l, sampler, tmp_sampler))
-      return false;
-
-    if (rasterizer && !rasterizer_state_from_lua(l, rasterizer, tmp_rast))
-      return false;
-
-    if (b) *b = tmp_blend.Detach();
-    if (d) *d = tmp_dss.Detach();
-    if (s) *s = tmp_sampler.Detach();
-    if (r) *r = tmp_rast.Detach();
-
-  } else {
-    LOG_ERROR_LN("Error loading lua state: %s", filename);
-    return false;
-  }
+	if (b) *b = tmp_blend.Detach();
+	if (d) *d = tmp_dss.Detach();
+	if (s) *s = tmp_sampler.Detach();
+	if (r) *r = tmp_rast.Detach();
 
 	return true;
 }

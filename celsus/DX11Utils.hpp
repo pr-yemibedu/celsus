@@ -67,8 +67,8 @@ void screen_to_clip(float x, float y, float w, float h, float *ox, float *oy);
 inline DXGI_FORMAT index_size_to_format(int size) 
 {
 	switch (size) {
-	case 16: return DXGI_FORMAT_R16_UINT;
-	case 32: return DXGI_FORMAT_R32_UINT;
+	case 2: return DXGI_FORMAT_R16_UINT;
+	case 4: return DXGI_FORMAT_R32_UINT;
 	default: assert(false);
 	}
 	return DXGI_FORMAT_UNKNOWN;
