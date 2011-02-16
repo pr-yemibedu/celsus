@@ -3,6 +3,7 @@
 #include "error2.hpp"
 #include "Logger.hpp"
 #include "D3D11Descriptions.hpp"
+#include <DxErr.h>
 
 using namespace std;
 
@@ -36,11 +37,37 @@ Graphics::~Graphics()
   _deleted = true;
 }
 
+struct ErrorCode
+{
+	explicit ErrorCode(HRESULT hr);
+	explicit ErrorCode(bool b);
+	operator bool() { return SUCCEEDED(hr); }
+	string2 error_string() const;
+
+	HRESULT hr;
+};
+
+ErrorCode::ErrorCode(HRESULT hr)
+	: hr(hr)
+{
+}
+
+#pragma comment(lib, "DxErr.lib")
+
+string2 ErrorCode::error_string() const
+{
+	//SCOPED_VAR(LPTSTR, buf, LocalFree);
+	//DWORD res = FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_FROM_HMODULE, 0, hr & 0xffff, 0, (LPTSTR)&buf, 0, NULL);
+	return string2(DXGetErrorString(hr));
+}
+
 
 bool Graphics::create_back_buffers(int width, int height)
 {
   _width = width;
   _height = height;
+
+	GetCurrentThreadId()
 
   // release any existing buffers
   const bool existing_buffers = _back_buffer || _render_target_view;
@@ -56,6 +83,10 @@ bool Graphics::create_back_buffers(int width, int height)
   RETURN_ON_FAIL_BOOL(_swap_chain->GetBuffer(0, IID_PPV_ARGS(&_back_buffer)), LOG_ERROR_LN);
   D3D11_TEXTURE2D_DESC back_buffer_desc;
   _back_buffer->GetDesc(&back_buffer_desc);
+
+	ErrorCode e(_device->CreateRenderTargetView(_back_buffer, NULL, &_render_target_view));
+	if (!e)
+		return e;
 
   RETURN_ON_FAIL_BOOL(_device->CreateRenderTargetView(_back_buffer, NULL, &_render_target_view), LOG_ERROR_LN);
 

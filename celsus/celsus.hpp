@@ -36,6 +36,7 @@ struct ScopedCs
 
 #define SCOPED_CS(x) MAKE_SCOPED(ScopedCs)((x));
 #define SCOPED_OBJ(x) MAKE_SCOPED(ScopedObj)((x));
+#define SCOPED_VAR(type, name, destr) type name; MAKE_SCOPED(ScopedObj)([name](){ destr(name);});
 
 template<typename T>
 T exch_null(T& t)
