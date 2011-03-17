@@ -7,6 +7,19 @@
 #include <stdint.h>
 #include <atlbase.h>
 
+struct RenderTargetData {
+	D3D11_TEXTURE2D_DESC texture_desc;
+	D3D11_TEXTURE2D_DESC depth_buffer_desc;
+	D3D11_RENDER_TARGET_VIEW_DESC rtv_desc;
+	D3D11_DEPTH_STENCIL_VIEW_DESC dsv_desc;
+	D3D11_SHADER_RESOURCE_VIEW_DESC srv_desc;
+	CComPtr<ID3D11Texture2D> texture;
+	CComPtr<ID3D11Texture2D> depth_buffer;
+	CComPtr<ID3D11RenderTargetView> rtv;
+	CComPtr<ID3D11DepthStencilView> dsv;
+	CComPtr<ID3D11ShaderResourceView> srv;
+};
+
 class Graphics
 {
 public:
@@ -30,6 +43,8 @@ public:
 	void set_default_render_target();
 
   D3D_FEATURE_LEVEL feature_level() const { return _feature_level; }
+
+	bool create_render_target(int width, int height, RenderTargetData *out);
 
   ID3D11RasterizerState *default_rasterizer_state() const { return _default_rasterizer_state; }
   ID3D11DepthStencilState *default_depth_stencil_state() const { return _default_depth_stencil_state; }
@@ -85,5 +100,8 @@ private:
   int32_t _frame_count;
   float _fps;
 };
+
+#define D3D_DEVICE Graphics::instance().device()
+#define D3D_CONTEXT Graphics::instance().context()
 
 #endif

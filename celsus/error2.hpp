@@ -81,7 +81,13 @@ template<> struct ErrorPredicate<HRESULT>
 #define RETURN_ON_FAIL_VOID(x, log) { bool b = ErrorPredicate<decltype(x)>::test_bool(x); if (!b) { log(#x); return; } }
 #define RETURN_ON_FAIL_PTR(x, log) { bool b = ErrorPredicate<decltype(x)>::test_bool(x); if (!b) { log(#x); return NULL; } }
 
+#define RETURN_ON_FAIL_HR_E(x) { HRESULT hr = ErrorPredicate<decltype(x)>::test_hresult(x); if (FAILED(hr) { LOG_ERROR_LN(#x); return hr; } }
+#define RETURN_ON_FAIL_HR_W(x) { HRESULT hr = ErrorPredicate<decltype(x)>::test_hresult(x); if (FAILED(hr) { LOG_WARNING_LN(#x); return hr; } }
+
 #define RETURN_ON_FAIL_BOOL_E(x) { bool b = ErrorPredicate<decltype(x)>::test_bool(x); if (!b) { LOG_ERROR_LN(#x); return false; } }
 #define RETURN_ON_FAIL_BOOL_W(x) { bool b = ErrorPredicate<decltype(x)>::test_bool(x); if (!b) { LOG_WARNING_LN(#x); return false; } }
+
+#define RETURN_ON_FAIL_PTR_E(x) { bool b = ErrorPredicate<decltype(x)>::test_bool(x); if (!b) { LOG_ERROR_LN(#x); return NULL; } }
+#define RETURN_ON_FAIL_PTR_W(x) { bool b = ErrorPredicate<decltype(x)>::test_bool(x); if (!b) { LOG_ERROR_LN(#x); return NULL; } }
 
 #endif

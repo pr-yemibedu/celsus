@@ -37,6 +37,7 @@ Graphics::~Graphics()
   _deleted = true;
 }
 
+#if 0
 struct ErrorCode
 {
 	explicit ErrorCode(HRESULT hr);
@@ -60,14 +61,43 @@ string2 ErrorCode::error_string() const
 	//DWORD res = FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_FROM_HMODULE, 0, hr & 0xffff, 0, (LPTSTR)&buf, 0, NULL);
 	return string2(DXGetErrorString(hr));
 }
+#endif
 
+bool Graphics::create_render_target(int width, int height, RenderTargetData *out)
+{
+	// create the render target
+	ZeroMemory(&out->texture_desc, sizeof(out->texture_desc));
+	out->texture_desc = CD3D11_TEXTURE2D_DESC(DXGI_FORMAT_R32G32B32A32_FLOAT, width, height, 1, 1, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE);
+	if (FAILED(_device->CreateTexture2D(&out->texture_desc, NULL, &out->texture.p)))
+		return false;
+
+	// create the render target view
+	out->rtv_desc = CD3D11_RENDER_TARGET_VIEW_DESC(D3D11_RTV_DIMENSION_TEXTURE2D, out->texture_desc.Format);
+	if (FAILED(_device->CreateRenderTargetView(out->texture, &out->rtv_desc, &out->rtv.p)))
+		return false;
+
+	// create the depth stencil texture
+	out->depth_buffer_desc = CD3D11_TEXTURE2D_DESC(DXGI_FORMAT_D24_UNORM_S8_UINT, width, height, 1, 1, D3D11_BIND_DEPTH_STENCIL);
+	if (FAILED(_device->CreateTexture2D(&out->depth_buffer_desc, NULL, &out->depth_buffer.p)))
+		return false;
+
+	// create depth stencil view
+	out->dsv_desc = CD3D11_DEPTH_STENCIL_VIEW_DESC(D3D11_DSV_DIMENSION_TEXTURE2D, DXGI_FORMAT_D24_UNORM_S8_UINT);
+	if (FAILED(_device->CreateDepthStencilView(out->depth_buffer, &out->dsv_desc, &out->dsv.p)))
+		return false;
+
+	// create the shader resource view
+	out->srv_desc = CD3D11_SHADER_RESOURCE_VIEW_DESC(D3D11_SRV_DIMENSION_TEXTURE2D, out->texture_desc.Format);
+	if (FAILED(_device->CreateShaderResourceView(out->texture, &out->srv_desc, &out->srv.p)))
+		return false;
+
+	return true;
+}
 
 bool Graphics::create_back_buffers(int width, int height)
 {
   _width = width;
   _height = height;
-
-	GetCurrentThreadId()
 
   // release any existing buffers
   const bool existing_buffers = _back_buffer || _render_target_view;
@@ -83,10 +113,6 @@ bool Graphics::create_back_buffers(int width, int height)
   RETURN_ON_FAIL_BOOL(_swap_chain->GetBuffer(0, IID_PPV_ARGS(&_back_buffer)), LOG_ERROR_LN);
   D3D11_TEXTURE2D_DESC back_buffer_desc;
   _back_buffer->GetDesc(&back_buffer_desc);
-
-	ErrorCode e(_device->CreateRenderTargetView(_back_buffer, NULL, &_render_target_view));
-	if (!e)
-		return e;
 
   RETURN_ON_FAIL_BOOL(_device->CreateRenderTargetView(_back_buffer, NULL, &_render_target_view), LOG_ERROR_LN);
 

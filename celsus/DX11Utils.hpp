@@ -42,7 +42,7 @@ HRESULT create_static_index_buffer(ID3D11Device* device, const std::vector<T>& v
 }
 
 void set_ib(ID3D11DeviceContext *context, const StaticBuffer &ib);
-void set_vb(ID3D11DeviceContext *context, const StaticBuffer &ib);
+void set_vb(ID3D11DeviceContext *context, const StaticBuffer &vb);
 
 void set_ib(ID3D11DeviceContext *context, ID3D11Buffer *buf);
 void set_vb(ID3D11DeviceContext *context, ID3D11Buffer *buf, const uint32_t stride);
