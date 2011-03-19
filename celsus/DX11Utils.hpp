@@ -41,6 +41,14 @@ HRESULT create_static_index_buffer(ID3D11Device* device, const std::vector<T>& v
 	return create_static_index_buffer(device, v.size(), sizeof(T), (const uint8_t*)&v[0], vertex_buffer);
 }
 
+template<class T>
+HRESULT create_static_index_buffer(ID3D11Device* device, const std::vector<T>& v, StaticBuffer *ib)
+{
+	ib->stride = sizeof(T);
+	ib->num_elems = v.size();
+	return create_static_index_buffer(device, v.size(), sizeof(T), (const uint8_t*)&v[0], &ib->buffer.p);
+}
+
 void set_ib(ID3D11DeviceContext *context, const StaticBuffer &ib);
 void set_vb(ID3D11DeviceContext *context, const StaticBuffer &vb);
 
