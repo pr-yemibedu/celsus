@@ -29,6 +29,10 @@
 #define LOG_FATAL(fmt, ...) LOG_MGR.debug_output(false, false, __FILE__, __LINE__, LogMgr::Fatal, fmt, __VA_ARGS__ );
 #define LOG_FATAL_LN(fmt, ...) LOG_MGR.debug_output(true, false, __FILE__, __LINE__, LogMgr::Fatal, fmt, __VA_ARGS__ );
 
+using std::set;
+using std::map;
+using std::string;
+
 class LogMgr 
 {
 public:
@@ -65,15 +69,15 @@ private:
   LogMgr();
   ~LogMgr();
 
-  void    init_severity_map();
+  void	init_severity_map();
 
-	FILE* _file;
+	HANDLE _file;
   int   _output_device;
   bool _break_on_error;
 	bool _output_line_numbers;
 
-  std::set<std::string> one_shot_set_;
-  std::map<OuputDevice, std::map<Severity, bool> > severity_map_;
+  set<string> one_shot_set_;
+  map<OuputDevice, map<Severity, bool> > severity_map_;
   static LogMgr* _instance;
 };
 

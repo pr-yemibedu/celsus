@@ -7,7 +7,7 @@
 LogMgr* LogMgr::_instance = NULL;
 
 LogMgr::LogMgr() 
-  : _file(0)
+  : _file(INVALID_HANDLE_VALUE)
   , _output_device(Debugger | File)
   , _break_on_error(false)
 	, _output_line_numbers(true)
@@ -19,11 +19,11 @@ LogMgr::~LogMgr()
 {
   severity_map_.clear();
 
-  if (_file != NULL)
-    fclose(_file);
+	if (_file != INVALID_HANDLE_VALUE)
+		CloseHandle(_file);
 }
 
-void LogMgr::debug_output( const bool new_line, const bool one_shot, const char *file, const int line, const Severity severity, const char* const format, ...  ) 
+void LogMgr::debug_output(const bool new_line, const bool one_shot, const char *file, const int line, const Severity severity, const char* const format, ...  )
 {
   va_list arg;
   va_start(arg, format);
@@ -50,7 +50,7 @@ void LogMgr::debug_output( const bool new_line, const bool one_shot, const char 
     OutputDebugStringA(str.c_str());
 
   if (_output_device & File) {
-    if (!_file) {
+    if (_file == INVALID_HANDLE_VALUE) {
       // no output file has been specified, so we use the current module as name
       char buf[MAX_PATH+1];
       buf[MAX_PATH] = 0;
@@ -59,9 +59,11 @@ void LogMgr::debug_output( const bool new_line, const bool one_shot, const char 
     }
   }
 
-  if (_file && (_output_device & LogMgr::File) && severity_map_[LogMgr::File][severity]) {
-    fputs(str.c_str(), _file);
-    fflush(_file);
+  if (_file != INVALID_HANDLE_VALUE && (_output_device & LogMgr::File) && severity_map_[LogMgr::File][severity]) {
+		DWORD bytes_written;
+		WriteFile(_file, str.c_str(), str.size(), &bytes_written, NULL);
+		if (severity >= Error)
+			FlushFileBuffers(_file);
   }
 
   va_end(arg);
@@ -96,35 +98,33 @@ LogMgr& LogMgr::disable_output(OuputDevice output)
   return *this;
 }
 
-LogMgr& LogMgr::open_output_file(const char* pFilename) 
+LogMgr& LogMgr::open_output_file(const char *filename) 
 {
   // close open file
-  if (_file != 0)
-    fclose(_file);
+	if (_file != INVALID_HANDLE_VALUE)
+		CloseHandle(_file);
 
-  if (0 != fopen_s(&_file, pFilename, "at")) {
-    // error opening file
-    return *this;
-  }
+	if (INVALID_HANDLE_VALUE == (_file = CreateFile(filename, GENERIC_WRITE, FILE_SHARE_READ, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL)))
+		return *this;
 
   // write header
   time_t rawTime;
   tm timeInfo;
-  char buf[80];
   time(&rawTime);
   if (0 != localtime_s(&timeInfo, &rawTime)) {
     // error
     return *this;
   }
-  strftime(buf, 80, "%H:%M:%S (%Y-%m-%d)", &timeInfo);
 
-  fputs("*****************************************************\n", _file);
-  fputs("****\n", _file);
-  fprintf(_file, "**** Started at: %s\n", buf);
-  fputs("****\n", _file);
-  fputs("*****************************************************\n", _file);
+	char buf[80];
+  strftime(buf, sizeof(buf), "%H:%M:%S (%Y-%m-%d)", &timeInfo);
 
-  fflush(_file);
+	char header[512];
+	const int len = sprintf(header, "*****************************************************\n****\n**** Started at: %s\n****\n*****************************************************\n", buf);
+
+	DWORD bytes_written = len;
+	WriteFile(_file, header, len, &bytes_written, NULL);
+	FlushFileBuffers(_file);
 
   return *this;
 }
