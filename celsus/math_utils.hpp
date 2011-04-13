@@ -1,6 +1,7 @@
 #pragma once
 #include <D3DX10math.h>
 #include <cassert>
+#include <xnamath.h>
 
 static const double kPi = 3.14159265358979323846;
 
@@ -133,6 +134,7 @@ inline void matrix_set_row(D3DXMATRIX &m, int row, const D3DXVECTOR3& v)
 // if mtx = proj-space, planes are in camera-space
 // if mtx = view*proj-space, planes are in world-space and so on
 void calc_planes(const D3DXMATRIX& mtx, D3DXPLANE *planes);
+void calc_planes(const D3DXMATRIX &mtx, XMFLOAT4 *planes);
 
 // computes the intersection of 2 planes, according to RTCD, page 209 (unoptimized version)
 bool intersect_unopt(const D3DXPLANE& p1, const D3DXPLANE& p2, D3DXVECTOR3 *p, D3DXVECTOR3 *d);

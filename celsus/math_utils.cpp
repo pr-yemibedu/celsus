@@ -29,6 +29,55 @@ D3DXVECTOR3 find_orthogonal(const D3DXVECTOR3& r)
   return res;
 }
 
+void calc_planes(const D3DXMATRIX &m, XMFLOAT4 *planes)
+{
+	// left
+	planes[0].x = m._14 + m._11;
+	planes[0].y = m._24 + m._21;
+	planes[0].z = m._34 + m._31;
+	planes[0].w = m._44 + m._41;
+
+	// right
+	planes[1].x = m._14 - m._11;
+	planes[1].y = m._24 - m._21;
+	planes[1].z = m._34 - m._31;
+	planes[1].w = m._44 - m._41;
+
+	// bottom
+	planes[2].x = m._14 + m._12;
+	planes[2].y = m._24 + m._22;
+	planes[2].z = m._34 + m._32;
+	planes[2].w = m._44 + m._42;
+
+	// top
+	planes[3].x = m._14 - m._12;
+	planes[3].y = m._24 - m._22;
+	planes[3].z = m._34 - m._32;
+	planes[3].w = m._44 - m._42;
+
+	// near
+	planes[4].x = m._13;
+	planes[4].y = m._23;
+	planes[4].z = m._33;
+	planes[4].w = m._43;
+
+	// far
+	planes[5].x = m._14 - m._13;
+	planes[5].y = m._24 - m._23;
+	planes[5].z = m._34 - m._33;
+	planes[5].w = m._44 - m._43;
+
+	for (int i = 0; i < 6; ++i) {
+		const float len = sqrt(planes[i].x * planes[i].x + planes[i].y * planes[i].y + planes[i].z * planes[i].z + planes[i].w + planes[i].w);
+		if (len > 0.0001f) {
+			const float recip = 1 / len;
+			planes[i].x *= recip;
+			planes[i].y *= recip;
+			planes[i].z *= recip;
+			planes[i].w *= recip;
+		}
+	}
+}
 
 void calc_planes(const D3DXMATRIX& m, D3DXPLANE *planes)
 {
