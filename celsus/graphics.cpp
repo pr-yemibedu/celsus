@@ -183,7 +183,11 @@ bool Graphics::init_directx(const HWND hwnd, const int width, const int height)
     adapter = adapters.front();
 
 
-	const int flags = D3D11_CREATE_DEVICE_DEBUG | D3D11_CREATE_DEVICE_BGRA_SUPPORT | D3D11_CREATE_DEVICE_SINGLETHREADED;
+#ifdef _DEBUG
+	const int flags = D3D11_CREATE_DEVICE_DEBUG | D3D11_CREATE_DEVICE_BGRA_SUPPORT;
+#else
+	const int flags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
+#endif
 
 	// Create the DX11 device
 	RETURN_ON_FAIL_BOOL(D3D11CreateDeviceAndSwapChain(
